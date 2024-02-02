@@ -8,3 +8,7 @@ A *bulleted* list:
   - This application will help users **find game parties** in a 'chat room' like environment and **track win-rates** with players
 - People who have a *group of friends* that play multiplayer games will use this to conveniently find parties without having to go through extensive communication to do so
 - This project is of interest to me due to my own personal experience of having very convoluted and confusing conversations of who wants to play a certain game. Even when implementing a callout system it was still hard to reach people and confirm attendance.
+
+## User Stories
+- As a user, I want to be able to assign myself a new game
+- As a user, I want to be able to create a new game party
