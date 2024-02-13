@@ -12,3 +12,5 @@ A *bulleted* list:
 ## User Stories
 - As a user, I want to be able to assign myself a new game
 - As a user, I want to be able to create a new game party
+- As a user, I want to be able to see a list of who is in a game party
+- As a user, I want to be able to be able to reduce the required size of the game party
