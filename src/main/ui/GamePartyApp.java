@@ -109,6 +109,7 @@ public class GamePartyApp {
         System.out.println("Which game would you like to create a party for?");
         System.out.println(mainPerson.getRoles());
         String gameNameSelected = scanner.next();
+
         Game gameSelected = null;
         for (Game game: mainPerson.getRoles()) {
             if (game.getName().equals(gameNameSelected)) {
@@ -116,16 +117,12 @@ public class GamePartyApp {
             }
         }
 
-        if (gameSelected == null) {
-            System.out.println("Role not found. "
-                    + "Please add role to create a party for " + gameNameSelected);
-        } else {
-            System.out.println("How many people would you like in this party?");
-            int maxPartySize = scanner.nextInt();
-            GameParty newGameParty = new GameParty(maxPartySize, gameSelected);
-            mainPerson.addToGameParty(newGameParty);
-            addGameParty(newGameParty);
-        }
+        System.out.println("How many people would you like in this party?");
+        int maxPartySize = scanner.nextInt();
+        GameParty newGameParty = new GameParty(maxPartySize, gameSelected);
+        mainPerson.addToGameParty(newGameParty);
+        addGameParty(newGameParty);
+
     }
 
     // MODIFIES: this
@@ -183,6 +180,7 @@ public class GamePartyApp {
         System.out.println(gameParties);
         int gamePartyIndex = scanner.nextInt() - 1;
         mainPerson.addToGameParty(gameParties.get(gamePartyIndex));
+        displayMenu();
     }
 
     // MODIFIES: this
@@ -230,6 +228,7 @@ public class GamePartyApp {
             System.out.println("What is the max party size of this game?");
             int maxPartySize = scanner.nextInt();
             Game newGame = new Game(gameName, maxPartySize);
+            mainPerson.addRole(newGame);
             addGame(newGame);
         } else if (command == 2) {
             displayMenu();
@@ -262,7 +261,6 @@ public class GamePartyApp {
         System.out.println(parties);
         int gamePartyIndex = scanner.nextInt() - 1;
         System.out.println(parties.get(gamePartyIndex).getCurrentMembers());
-
     }
 
     // MODIFIES: this

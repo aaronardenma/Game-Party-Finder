@@ -3,7 +3,7 @@ package model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GamePartyTest {
     private Person person1;
@@ -147,5 +147,17 @@ public class GamePartyTest {
         assertEquals(5, testGameParty.getMaxPartySize());
         testGameParty.changeTotalSize(1);
         assertEquals(5, testGameParty.getMaxPartySize());
+    }
+
+    @Test
+    public void testGetCurrentMembers() {
+        person1.addRole(game1);
+        person2.addRole(game1);
+        person3.addRole(game1);
+        testGameParty.addMember(person1);
+        testGameParty.addMember(person3);
+        assertTrue(testGameParty.getCurrentMembers().contains(person1));
+        assertFalse(testGameParty.getCurrentMembers().contains(person2));
+        assertTrue(testGameParty.getCurrentMembers().contains(person3));
     }
 }

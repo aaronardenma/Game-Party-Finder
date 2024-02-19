@@ -28,7 +28,7 @@ public class GameParty {
     // if their roles contain the game of the GameParty
 
     public void addMember(Person p) {
-        if (p.getRoles().contains(game)) {
+        if (p.getRoles().contains(game) && !currentMembers.contains(p)) {
             this.currentMembers.add(p);
             this.currentNumOfMembers++;
         }
