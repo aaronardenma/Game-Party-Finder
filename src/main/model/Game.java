@@ -4,15 +4,21 @@ import java.util.ArrayList;
 
 public class Game {
     private String name;
-    private int numberOfPlayers;
     private ArrayList<Person> listOfPlayers;
+    private int maxPartyMembers;
 
-    public Game(String name) {
+    public Game(String name, int maxPartyMembers) {
         this.name = name;
-        this.numberOfPlayers = 0;
         this.listOfPlayers = new ArrayList<Person>();
+        this.maxPartyMembers = maxPartyMembers;
 
     }
 
+    public int getMaxPartyMembers() {
+        return this.maxPartyMembers;
+    }
 
+    public ArrayList<Person> getListOfPlayers() {
+        return this.listOfPlayers;
+    }
 }

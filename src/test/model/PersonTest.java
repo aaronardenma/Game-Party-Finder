@@ -17,9 +17,9 @@ class PersonTest {
     @BeforeEach
     public void runBefore() {
         testPerson = new Person("Aaron");
-        game1 = new Game("League of Legends");
-        game2 = new Game("Valorant");
-        game3 = new Game("CS2");
+        game1 = new Game("League of Legends", 5);
+        game2 = new Game("Valorant", 5);
+        game3 = new Game("CS2", 5);
         gameParty1 = new GameParty(5, game1);
         gameParty2 = new GameParty(3, game2);
         gameParty3 = new GameParty(4, game3);
