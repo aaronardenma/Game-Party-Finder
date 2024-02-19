@@ -88,6 +88,7 @@ class PersonTest {
         assertEquals(1, testPerson.getGameParties().size());
     }
 
+
     @Test
     public void testAddRoleHasRoleInList() {
         testPerson.addRole(game1);

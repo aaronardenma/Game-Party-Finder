@@ -37,4 +37,21 @@ public class Game {
         return this.name;
     }
 
+    // MODIFIES: this
+    // EFFECTS: add p to listOfPlayers if listOfPlayers does not contain p
+    public void addPerson(Person p) {
+        if (!listOfPlayers.contains(p)) {
+            this.listOfPlayers.add(p);
+        }
+    }
+
+    // REQUIRES: listOfPlayers.contains(p)
+    // MODIFIES: this
+    // EFFECTS: remove p from listOfPlayers if listOfPlayers contains p
+    public void removePerson(Person p) {
+        if (listOfPlayers.contains(p)) {
+            this.listOfPlayers.remove(p);
+        }
+    }
+
 }

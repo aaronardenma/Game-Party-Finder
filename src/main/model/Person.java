@@ -40,10 +40,10 @@ public class Person {
 
     // MODIFIES: this, and GameParty
     // EFFECTS: Adds this GameParty to list of gameParties and adds Person to GameParty currentMembers
-    // if the GameParty does not have this Person as a member and gameParties does not contain the GameParty
+    // gameParties does not contain the GameParty
 
     public void addToGameParty(GameParty gp) {
-        if (!gp.getCurrentMembers().contains(this) && !gameParties.contains(gp)) {
+        if (!gameParties.contains(gp)) {
             gp.addMember(this);
             gameParties.add(gp);
         }
@@ -57,6 +57,7 @@ public class Person {
         if (!roles.contains(g)) {
             this.roles.add(g);
             this.numOfRoles++;
+            g.addPerson(this);
         }
     }
 
@@ -68,6 +69,7 @@ public class Person {
         if (roles.contains(g)) {
             this.roles.remove(g);
             this.numOfRoles--;
+            g.removePerson(this);
         }
 
     }
