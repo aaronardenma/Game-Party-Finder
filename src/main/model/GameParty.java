@@ -2,17 +2,24 @@ package model;
 
 import java.util.ArrayList;
 
+// Represents a Game Party with a max party size, current number of members,
+// game, and list of current members
 public class GameParty {
-    private int totalSize;
+    private int maxPartySize;
     private int currentNumOfMembers;
-    private Game game;
+    private final Game game;
     private ArrayList<Person> currentMembers;
 
-    public GameParty(int totalSize, Game game) {
-        this.totalSize = totalSize;
+    // REQUIRES: maxPartySize has an integer greater than 0
+    // EFFECTS: maxPartySize on GameParty is set to maxPartySize;
+    // currentNumOfMembers is set to 0; game is set to game;
+    // currentMembers is set to an empty array list
+
+    public GameParty(int maxPartySize, Game game) {
+        this.maxPartySize = maxPartySize;
         this.currentNumOfMembers = 0;
         this.game = game;
-        this.currentMembers = new ArrayList<Person>();
+        this.currentMembers = new ArrayList<>();
 
     }
 
@@ -21,7 +28,7 @@ public class GameParty {
     // if their roles contain the game of the GameParty
 
     public void addMember(Person p) {
-        if (p.getRoles().contains(game) && !currentMembers.contains(p)) {
+        if (p.getRoles().contains(game)) {
             this.currentMembers.add(p);
             this.currentNumOfMembers++;
         }
@@ -30,7 +37,7 @@ public class GameParty {
     // REQUIRES: currentMembers.contains(p)
     // MODIFIES: this
     // EFFECTS: Removes person from currentMembers list
-    // and reduces currentSize by 1
+    // and reduces currentSize by 1 if currentMembers contains the Person p
 
     public void deleteMember(Person p) {
         if (currentMembers.contains(p)) {
@@ -39,27 +46,30 @@ public class GameParty {
         }
     }
 
-    // REQUIRES: newSize must be bigger or equal to currentSize
     // MODIFIES: this
-    // EFFECTS: changes this party size to newSize
+    // EFFECTS: changes this party size to newSize if newSize is bigger or equal than the
+    // current Number of members in the Game Party and newSize is smaller or equal to the
+    // maximum party members for the Game Party's game
 
     public void changeTotalSize(int newSize) {
         if (newSize >= this.currentNumOfMembers && newSize <= game.getMaxPartyMembers()) {
-            this.totalSize = newSize;
+            this.maxPartySize = newSize;
         }
     }
+
+    // getter
 
     public ArrayList<Person> getCurrentMembers() {
         return this.currentMembers;
     }
 
-    public int getTotalSize() {
-        return this.totalSize;
+    // getter
+
+    public int getMaxPartySize() {
+        return this.maxPartySize;
     }
 
-    public Game getGame() {
-        return this.game;
-    }
+    // getter
 
     public int getCurrentNumOfMembers() {
         return this.currentNumOfMembers;

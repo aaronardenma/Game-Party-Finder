@@ -69,7 +69,7 @@ class PersonTest {
     }
 
     @Test
-    public void testAddToGameParty() {
+    public void testAddToGamePartyAllDifferentParties() {
         assertEquals(0, testPerson.getGameParties().size());
         testPerson.addToGameParty(gameParty1);
         assertEquals(1, testPerson.getGameParties().size());
@@ -77,5 +77,47 @@ class PersonTest {
         assertEquals(2, testPerson.getGameParties().size());
         testPerson.addToGameParty(gameParty3);
         assertEquals(3, testPerson.getGameParties().size());
+    }
+
+    @Test
+    public void testAddToGamePartySameParty() {
+        assertEquals(0, testPerson.getGameParties().size());
+        testPerson.addToGameParty(gameParty1);
+        assertEquals(1, testPerson.getGameParties().size());
+        testPerson.addToGameParty(gameParty1);
+        assertEquals(1, testPerson.getGameParties().size());
+    }
+
+    @Test
+    public void testAddRoleHasRoleInList() {
+        testPerson.addRole(game1);
+        assertEquals(1, testPerson.getNumOfRoles());
+        testPerson.addRole(game1);
+        assertEquals(1, testPerson.getNumOfRoles());
+    }
+
+    @Test
+    public void testAddRoleNoRoleInList() {
+        testPerson.addRole(game1);
+        assertEquals(1, testPerson.getNumOfRoles());
+        testPerson.addRole(game2);
+        assertEquals(2, testPerson.getNumOfRoles());
+    }
+
+    @Test
+    public void testDeleteRoleNoRole() {
+        testPerson.addRole(game1);
+        assertEquals(1, testPerson.getNumOfRoles());
+        testPerson.deleteRole(game2);
+        assertEquals(1, testPerson.getNumOfRoles());
+    }
+
+    @Test
+    public void testDeleteRoleHasRole() {
+        assertEquals(0, testPerson.getNumOfRoles());
+        testPerson.addRole(game1);
+        assertEquals(1, testPerson.getNumOfRoles());
+        testPerson.deleteRole(game1);
+        assertEquals(0, testPerson.getNumOfRoles());
     }
 }

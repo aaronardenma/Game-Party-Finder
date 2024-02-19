@@ -108,19 +108,19 @@ public class GamePartyTest {
     @Test
     public void testChangeTotalSize() {
         testGameParty.changeTotalSize(4);
-        assertEquals(4, testGameParty.getTotalSize());
+        assertEquals(4, testGameParty.getMaxPartySize());
         testGameParty.changeTotalSize(3);
-        assertEquals(3, testGameParty.getTotalSize());
+        assertEquals(3, testGameParty.getMaxPartySize());
         testGameParty.changeTotalSize(5);
-        assertEquals(5, testGameParty.getTotalSize());
+        assertEquals(5, testGameParty.getMaxPartySize());
     }
 
     @Test
     public void testChangeTotalSizeAboveGameMaxPartySize() {
         testGameParty.changeTotalSize(6);
-        assertEquals(5, testGameParty.getTotalSize());
+        assertEquals(5, testGameParty.getMaxPartySize());
         testGameParty.changeTotalSize(20);
-        assertEquals(5, testGameParty.getTotalSize());
+        assertEquals(5, testGameParty.getMaxPartySize());
     }
 
     @Test
@@ -132,7 +132,7 @@ public class GamePartyTest {
         testGameParty.addMember(person2);
         testGameParty.addMember(person3);
         testGameParty.changeTotalSize(3);
-        assertEquals(3, testGameParty.getTotalSize());
+        assertEquals(3, testGameParty.getMaxPartySize());
     }
 
     @Test
@@ -144,8 +144,8 @@ public class GamePartyTest {
         testGameParty.addMember(person2);
         testGameParty.addMember(person3);
         testGameParty.changeTotalSize(2);
-        assertEquals(5, testGameParty.getTotalSize());
+        assertEquals(5, testGameParty.getMaxPartySize());
         testGameParty.changeTotalSize(1);
-        assertEquals(5, testGameParty.getTotalSize());
+        assertEquals(5, testGameParty.getMaxPartySize());
     }
 }
