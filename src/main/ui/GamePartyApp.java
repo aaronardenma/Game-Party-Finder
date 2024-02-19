@@ -157,11 +157,20 @@ public class GamePartyApp {
         } else if (command == 4) {
             deleteRole();
         } else if (command == 5) {
-            System.out.println(mainPerson.getName() + " Roles:");
-            System.out.println(mainPerson.getRoles());
+            viewRoles();
         } else if (command == 6) {
             displayMenu();
         }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: view all roles for mainPerson user
+    public void viewRoles() {
+        System.out.println(mainPerson.getName() + " Roles:");
+        ArrayList<Game> roles = mainPerson.getRoles();
+        ArrayList<String> roleNames = new ArrayList<>();
+        roles.forEach(game -> roleNames.add(game.getName()));
+        System.out.println(roleNames);
     }
 
     // MODIFIES: this
@@ -180,7 +189,6 @@ public class GamePartyApp {
         System.out.println(gameParties);
         int gamePartyIndex = scanner.nextInt() - 1;
         mainPerson.addToGameParty(gameParties.get(gamePartyIndex));
-        displayMenu();
     }
 
     // MODIFIES: this

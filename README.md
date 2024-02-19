@@ -10,7 +10,7 @@ A *bulleted* list:
 - This project is of interest to me due to my own personal experience of having very convoluted and confusing conversations of who wants to play a certain game. Even when implementing a callout system it was still hard to reach people and confirm attendance.
 
 ## User Stories
-- As a user, I want to be able to assign myself a new game
+- As a user, I want to be able to assign myself any number of games
 - As a user, I want to be able to create a new game party
 - As a user, I want to be able to see a list of who is in a game party
 - As a user, I want to be able to be able to reduce the required size of the game party
