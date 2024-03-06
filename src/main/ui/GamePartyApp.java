@@ -7,11 +7,8 @@ import java.util.ArrayList;
 
 // Game Party Maker application
 public class GamePartyApp {
-    private Person mainPerson;
+    private GamePartyFinder partyFinder;
     private Scanner scanner;
-    private ArrayList<Person> people;
-    private ArrayList<Game> games;
-    private ArrayList<GameParty> gameParties;
 
     // EFFECTS: runs the Game Party application
     public GamePartyApp() {
@@ -25,7 +22,6 @@ public class GamePartyApp {
         String command;
 
         init();
-        createMainUser();
 
         while (keepGoing) {
             displayMenu();
@@ -45,97 +41,29 @@ public class GamePartyApp {
     // MODIFIES: this
     // EFFECTS: initializes people, games and gameParties lists
     private void init() {
-        people = new ArrayList<>();
-        games = new ArrayList<>();
-        gameParties = new ArrayList<>();
-    }
-
-    // MODIFIES: this
-    // EFFECTS: Creates main Person user, primary Game, and GameParty
-    // to go through the interface
-    private void createMainUser() {
+        partyFinder = new GamePartyFinder();
         scanner = new Scanner(System.in);
         scanner.useDelimiter("\n");
-
-        System.out.println("What is your name?");
-        String name = scanner.next();
-        mainPerson = new Person(name);
-        addPerson(mainPerson);
-
-        System.out.println("What is a game you would like to play?");
-        String gameName = scanner.next();
-        System.out.println("What is the max party size " + gameName + " allows?");
-        int maxGamePartySize = scanner.nextInt();
-        Game newGame = new Game(gameName, maxGamePartySize);
-        mainPerson.addRole(newGame);
-        addGame(newGame);
-
-        System.out.println("How many people would you like in this new party?");
-        int maxPartySize = scanner.nextInt();
-        GameParty newGameParty = new GameParty(maxPartySize, newGame);
-        mainPerson.addToGameParty(newGameParty);
-        addGameParty(newGameParty);
-    }
-
-    // MODIFIES: this
-    // EFFECTS: switches main Person to user input
-    private void switchUser() {
-        System.out.println("Which User would you like to switch to?");
-        System.out.println("Available Users:");
-        System.out.println(people);
-        String newUser = scanner.next();
-
-        for (Person user: people) {
-            if (user.getName().equals(newUser)) {
-                mainPerson = user;
-            }
-        }
     }
 
     // EFFECTS: displays menu of options to user
     private void displayMenu() {
         System.out.println("\nSelect actions involving:");
-        System.out.println("\tpeople");
-        System.out.println("\tgames");
-        System.out.println("\tgame parties");
-        System.out.println("\tswitch user");
+        System.out.println("\t1. People");
+        System.out.println("\t2. Games");
+        System.out.println("\t3. GameParties");
         System.out.println("\tquit");
-    }
-
-    // MODIFIES: this
-    // EFFECTS: Creates new Game Party according to user input for Game Party Game and max party size
-    // if Game specified is not created as a role, print game not found
-    private void createGameParty() {
-        System.out.println("Which game would you like to create a party for?");
-        System.out.println(mainPerson.getRoles());
-        String gameNameSelected = scanner.next();
-
-        Game gameSelected = null;
-        for (Game game: mainPerson.getRoles()) {
-            if (game.getName().equals(gameNameSelected)) {
-                gameSelected = game;
-            }
-        }
-
-        System.out.println("How many people would you like in this party?");
-        int maxPartySize = scanner.nextInt();
-        GameParty newGameParty = new GameParty(maxPartySize, gameSelected);
-        mainPerson.addToGameParty(newGameParty);
-        addGameParty(newGameParty);
-
     }
 
     // MODIFIES: this
     // EFFECTS: processes user command
     private void processCommand(String command) {
-        if (command.equals("people")) {
+        if (command.equals("People")) {
             peopleActions();
-        } else if (command.equals("games")) {
+        } else if (command.equals("Games")) {
             gameActions();
-        } else if (command.equals("game parties")) {
+        } else if (command.equals("GameParties")) {
             gamePartyActions();
-        } else if (command.equals("switch user")) {
-            switchUser();
         } else {
             System.out.println("Selection not valid...");
         }
@@ -145,11 +73,11 @@ public class GamePartyApp {
     private void peopleActions() {
         System.out.println("Please select an action: "
                 + "(\n1. Create \n2. Add to Game Party \n3. Add Role"
-                + "\n4. Delete Role \n5. See all Roles)\n6. back");
+                + "\n4. Delete Role \n5. See all Roles \n6. back");
         int command = scanner.nextInt();
 
         if (command == 1) {
-            createNewPerson();
+            createPerson();
         } else if (command == 2) {
             addToGameParty();
         } else if (command == 3) {
@@ -164,64 +92,66 @@ public class GamePartyApp {
     }
 
     // MODIFIES: this
-    // EFFECTS: view all roles for mainPerson user
+    // EFFECTS: Create new person
+    private void createPerson() {
+        System.out.println("What is this new Person's name?");
+        String newName = scanner.next();
+        partyFinder.addPerson(newName);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Add Person to the GameParty specified by user input
+    private void addToGameParty() {
+        System.out.println("Who should be added to a game party?");
+        Person person = getPersonFromUserResponse();
+        System.out.println("Which Game Party should " + person.getName() + " be added to?");
+        partyFinder.addPersonToGameParty(person, getGamePartyFromUserResponse());
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Add new Game/Role from list of existing roles to specified Person
+    private void addNewRole() {
+        System.out.println("Who do you want to have a new role?");
+        Person person = getPersonFromUserResponse();
+        System.out.println("What Game should we add to " + person.getName() + " list of roles?");
+        Game newGame = getGameFromUserResponse();
+        person.addRole(newGame);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Delete existing Role from person selected
+    private void deleteRole() {
+        System.out.println("Which person's roles would you like to change?");
+        Person person = getPersonFromUserResponse();
+
+        System.out.println("Which role should be deleted?");
+        System.out.println(getRoleNames(person));
+        int roleIndex = scanner.nextInt() - 1;
+        ArrayList<Game> roles = partyFinder.getRolesFromPerson(person);
+
+        partyFinder.deleteRoleFromPerson(person, roles.get(roleIndex));
+    }
+
+    // MODIFIES: this
+    // EFFECTS: view all roles for Person determined by user Response
     public void viewRoles() {
-        System.out.println(mainPerson.getName() + " Roles:");
-        ArrayList<Game> roles = mainPerson.getRoles();
+        System.out.println("Whose roles would you like to see?");
+        System.out.println(partyFinder.getPeopleNames());
+        int peopleIndex = scanner.nextInt() - 1;
+        Person person = partyFinder.getPeople().get(peopleIndex);
+        ArrayList<Game> roles = person.getRoles();
         ArrayList<String> roleNames = new ArrayList<>();
         roles.forEach(game -> roleNames.add(game.getName()));
         System.out.println(roleNames);
     }
 
-    // MODIFIES: this
-    // EFFECTS: creates a new person with user input specifying the new Person's name
-    private void createNewPerson() {
-        System.out.println("What is this new Person's name?");
-        String newName = scanner.next();
-        Person newPerson = new Person(newName);
-        people.add(newPerson);
-    }
+    // EFFECTS: returns a list of role names that the person has
+    private ArrayList<String> getRoleNames(Person person) {
+        ArrayList<Game> roles = partyFinder.getRolesFromPerson(person);
+        ArrayList<String> roleNames = new ArrayList<>();
+        roles.forEach((game) -> roleNames.add(game.getName()));
 
-    // MODIFIES: this
-    // EFFECTS: Add Person User is currently set as to the GameParty specified by user input
-    private void addToGameParty() {
-        System.out.println("Which Game Party should we be added to?");
-        System.out.println(gameParties);
-        int gamePartyIndex = scanner.nextInt() - 1;
-        mainPerson.addToGameParty(gameParties.get(gamePartyIndex));
-    }
-
-    // MODIFIES: this
-    // EFFECTS: Allow user to add new Role from list of existing roles to current Person
-    private void addNewRole() {
-        System.out.println("What Role should we add to "
-                + mainPerson.getName() + " ?");
-        System.out.println("Available Games:");
-        ArrayList<String> gameNames = new ArrayList<>();
-        games.forEach(game -> gameNames.add(game.getName()));
-        System.out.println(gameNames);
-        String newRoleName = scanner.next();
-
-        Game newGame = null;
-        for (Game game: games) {
-            if (game.getName().equals(newRoleName)) {
-                newGame = game;
-                mainPerson.addRole(game);
-            }
-        }
-
-        if (newGame == null) {
-            System.out.println("Game not found");
-        }
-    }
-
-    // MODIFIES: this
-    // EFFECTS: Allow user to delete existing Role from current Person
-    private void deleteRole() {
-        System.out.println("Which role should be deleted?");
-        System.out.println(mainPerson.getRoles());
-        int index = scanner.nextInt() - 1;
-        mainPerson.deleteRole(games.get(index));
+        return roleNames;
     }
 
     // EFFECTS: displays a list of actions to the user involving the Game class
@@ -231,16 +161,20 @@ public class GamePartyApp {
         int command = scanner.nextInt();
 
         if (command == 1) {
-            System.out.println("What is the name of the game?");
-            String gameName = scanner.next();
-            System.out.println("What is the max party size of this game?");
-            int maxPartySize = scanner.nextInt();
-            Game newGame = new Game(gameName, maxPartySize);
-            mainPerson.addRole(newGame);
-            addGame(newGame);
+            createGame();
         } else if (command == 2) {
             displayMenu();
         }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Add Game to the list of games
+    private void createGame() {
+        System.out.println("What is this new Game's name?");
+        String newName = scanner.next();
+        System.out.println("What is the max party size for this game?");
+        int maxPartySize = scanner.nextInt();
+        partyFinder.addGame(newName, maxPartySize);
     }
 
     // EFFECTS: displays a list of actions to the user involving the GameParty class
@@ -262,49 +196,56 @@ public class GamePartyApp {
     }
 
     // MODIFIES: this
-    // EFFECTS: Allow user to view all members from a Game Party they are in and is specified by user input
+    // EFFECTS: Creates new Game Party
+    private void createGameParty() {
+        System.out.println("Which game would you like to play?");
+        Game gameSelected = getGameFromUserResponse();
+        System.out.println("How many people would you like in this party?");
+        int maxPartySize = scanner.nextInt();
+        System.out.println("Give this party a name");
+        String partyName = scanner.next();
+        partyFinder.createGameParty(gameSelected, maxPartySize, partyName);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Allow user to view all members from a Game Party that is specified by user input
     private void viewPeopleInGameParty() {
         System.out.println("Which of your Game Parties would you like to look at?");
-        ArrayList<GameParty> parties = mainPerson.getGameParties();
-        System.out.println(parties);
-        int gamePartyIndex = scanner.nextInt() - 1;
-        System.out.println(parties.get(gamePartyIndex).getCurrentMembers());
+        GameParty gamePartySelected = getGamePartyFromUserResponse();
+        ArrayList<Person> currentMembers = gamePartySelected.getCurrentMembers();
+        ArrayList<String> currentMemberNames = new ArrayList<>();
+        currentMembers.forEach((person) -> currentMemberNames.add(person.getName()));
+        System.out.println(currentMemberNames);
     }
 
     // MODIFIES: this
-    // EFFECTS: Allow user to change Game Party max size to a value specified by user input
+    // EFFECTS: Allow user to change a Game Party max size to a value specified by user input
     private void changeGamePartyMaxSize() {
         System.out.println("Which of your Game Parties would you like to reduce its size?");
-        ArrayList<GameParty> parties = mainPerson.getGameParties();
-        System.out.println(parties);
-        int gamePartyIndex = scanner.nextInt() - 1;
+        GameParty gamePartySelected = getGamePartyFromUserResponse();
         System.out.println("Set new size of the party");
         int newSize = scanner.nextInt();
-        parties.get(gamePartyIndex).changeTotalSize(newSize);
+        partyFinder.changePartySize(gamePartySelected, newSize);
     }
 
-    // MODIFIES: this
-    // EFFECTS: Add Person to the list of persons
-    private void addPerson(Person p) {
-        if (!people.contains(p)) {
-            people.add(p);
-        }
+    // EFFECTS: return a Person specified by user response from a list of people in GamePartyFinder
+    private Person getPersonFromUserResponse() {
+        System.out.println(partyFinder.getPeopleNames());
+        int personNameIndex = scanner.nextInt() - 1;
+        return partyFinder.getPeople().get(personNameIndex);
     }
 
-    // MODIFIES: this
-    // EFFECTS: Add Game to the list of games
-    private void addGame(Game g) {
-        if (!games.contains(g)) {
-            games.add(g);
-        }
+    // EFFECTS: return a Game specified by user response from a list of games in GamePartyFinder
+    private Game getGameFromUserResponse() {
+        System.out.println(partyFinder.getGameNames());
+        int gameIndex = scanner.nextInt() - 1;
+        return partyFinder.getGames().get(gameIndex);
     }
 
-    // MODIFIES: this
-    // EFFECTS: Add GameParty to the list of game parties
-    private void addGameParty(GameParty gp) {
-        if (!gameParties.contains(gp)) {
-            gameParties.add(gp);
-        }
+    // EFFECTS: return a GameParty specified by user response from a list of game parties in GamePartyFinder
+    private GameParty getGamePartyFromUserResponse() {
+        System.out.println(partyFinder.getGamePartyNames());
+        int gamePartyIndex = scanner.nextInt() - 1;
+        return partyFinder.getGameParties().get(gamePartyIndex);
     }
-
 }

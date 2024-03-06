@@ -9,17 +9,21 @@ public class GameParty {
     private int currentNumOfMembers;
     private final Game game;
     private ArrayList<Person> currentMembers;
+    private String status;
+    private String gamePartyName;
 
     // REQUIRES: maxPartySize has an integer greater than 0
     // EFFECTS: maxPartySize on GameParty is set to maxPartySize;
     // currentNumOfMembers is set to 0; game is set to game;
     // currentMembers is set to an empty array list
 
-    public GameParty(int maxPartySize, Game game) {
+    public GameParty(Game game, int maxPartySize, String name) {
         this.maxPartySize = maxPartySize;
         this.currentNumOfMembers = 0;
         this.game = game;
         this.currentMembers = new ArrayList<>();
+        this.status = "Pending";
+        this.gamePartyName = name;
 
     }
 
@@ -75,4 +79,7 @@ public class GameParty {
         return this.currentNumOfMembers;
     }
 
+    public String getName() {
+        return this.gamePartyName;
+    }
 }
