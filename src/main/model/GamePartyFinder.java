@@ -16,7 +16,9 @@ public class GamePartyFinder {
 
     public void addPerson(String name) {
         Person newPerson = new Person(name);
-        people.add(newPerson);
+        if (!getPeopleNames().contains(name)) {
+            people.add(newPerson);
+        }
     }
 
     public void addGame(String name, int maxPartyMembers) {
@@ -38,11 +40,6 @@ public class GamePartyFinder {
     // MODIFIES: this
     // EFFECTS: adds person to gameParty
     public void addPersonToGameParty(Person person, GameParty gameParty) {
-//        for (GameParty gameParty : gameParties) {
-//            if (partyName.equalsIgnoreCase(gameParty.getName())) {
-//                person.addToGameParty(gameParty);
-//            }
-//        }
         person.addToGameParty(gameParty);
     }
 
@@ -61,10 +58,6 @@ public class GamePartyFinder {
 
     public void changePartySize(GameParty gameParty, int newSize) {
         gameParty.changeTotalSize(newSize);
-    }
-
-    public ArrayList<Person> getListOfGamePlayers(Game game) {
-        return game.getListOfPlayers();
     }
 
     public ArrayList<GameParty> getGameParties() {
@@ -96,6 +89,7 @@ public class GamePartyFinder {
         people.forEach((p) -> peopleNames.add(p.getName()));
         return peopleNames;
     }
+
 
 
 }

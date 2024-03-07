@@ -115,7 +115,7 @@ public class GamePartyApp {
         Person person = getPersonFromUserResponse();
         System.out.println("What Game should we add to " + person.getName() + " list of roles?");
         Game newGame = getGameFromUserResponse();
-        person.addRole(newGame);
+        partyFinder.addRoleToPerson(person, newGame);
     }
 
     // MODIFIES: this

@@ -26,7 +26,7 @@ public class GamePartyTest {
         game1 = new Game("League of Legends", 5);
         game2 = new Game("Valorant", 5);
         game3 = new Game("CS2", 5);
-        testGameParty = new GameParty(5, game1);
+        testGameParty = new GameParty(game1, 5, "party 1");
     }
 
     @Test
@@ -159,5 +159,27 @@ public class GamePartyTest {
         assertTrue(testGameParty.getCurrentMembers().contains(person1));
         assertFalse(testGameParty.getCurrentMembers().contains(person2));
         assertTrue(testGameParty.getCurrentMembers().contains(person3));
+    }
+
+    @Test
+    public void testGetMaxPartySize() {
+        assertEquals(5, testGameParty.getMaxPartySize());
+    }
+
+    @Test
+    public void testGetCurrentNumOfMembers() {
+        assertEquals(0, testGameParty.getCurrentNumOfMembers());
+        person1.addRole(game1);
+        testGameParty.addMember(person1);
+        assertEquals(1, testGameParty.getCurrentNumOfMembers());
+        testGameParty.addMember(person1);
+        assertEquals(1, testGameParty.getCurrentNumOfMembers());
+        testGameParty.deleteMember(person1);
+        assertEquals(0, testGameParty.getCurrentNumOfMembers());
+    }
+
+    @Test
+    public void testGetName() {
+        assertEquals("party 1", testGameParty.getName());
     }
 }

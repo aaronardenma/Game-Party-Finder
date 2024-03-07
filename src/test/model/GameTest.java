@@ -19,7 +19,7 @@ public class GameTest {
         person1 = new Person("Aaron");
         person2 = new Person("Paolo");
         person3 = new Person("Renee");
-        gameParty1 = new GameParty(5, testGame);
+        gameParty1 = new GameParty(testGame, 5, "party 1");
         testGame = new Game("League of Legends", 5);
     }
 
@@ -54,4 +54,6 @@ public class GameTest {
         testGame.removePerson(person2);
         assertEquals(1, testGame.getListOfPlayers().size());
     }
+
+
 }

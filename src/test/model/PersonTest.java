@@ -20,9 +20,9 @@ class PersonTest {
         game1 = new Game("League of Legends", 5);
         game2 = new Game("Valorant", 5);
         game3 = new Game("CS2", 5);
-        gameParty1 = new GameParty(5, game1);
-        gameParty2 = new GameParty(3, game2);
-        gameParty3 = new GameParty(4, game3);
+        gameParty1 = new GameParty(game1, 5, "party 1");
+        gameParty2 = new GameParty(game2, 3, "party 2");
+        gameParty3 = new GameParty(game3, 4, "party 3");
     }
 
     @Test

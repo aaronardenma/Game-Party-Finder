@@ -62,23 +62,21 @@ public class GameParty {
     }
 
     // getter
-
     public ArrayList<Person> getCurrentMembers() {
         return this.currentMembers;
     }
 
     // getter
-
     public int getMaxPartySize() {
         return this.maxPartySize;
     }
 
     // getter
-
     public int getCurrentNumOfMembers() {
         return this.currentNumOfMembers;
     }
 
+    // getter
     public String getName() {
         return this.gamePartyName;
     }
