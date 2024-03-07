@@ -13,7 +13,6 @@ public class GamePartyFinderTest {
     private Person person2;
     private Person person3;
     private GameParty party1;
-    private GameParty party2;
 
     @BeforeEach
     public void runBefore() {
@@ -24,7 +23,6 @@ public class GamePartyFinderTest {
         person2 = new Person("Nic");
         person3 = new Person("Renee");
         party1 = new GameParty(game1, 5, "party 1");
-        party2 = new GameParty(game2, 3, "party 2");
     }
 
     @Test
@@ -47,6 +45,8 @@ public class GamePartyFinderTest {
         testGamePartyFinder.addGame("Valorant", 3);
         assertEquals(2, testGamePartyFinder.getGames().size());
         assertTrue(testGamePartyFinder.getGameNames().contains("Valorant"));
+        testGamePartyFinder.addGame("VALORANT", 3);
+        assertEquals(2, testGamePartyFinder.getGames().size());
     }
 
     @Test

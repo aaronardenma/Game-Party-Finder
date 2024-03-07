@@ -14,3 +14,5 @@ A *bulleted* list:
 - As a user, I want to be able to create a new game party
 - As a user, I want to be able to see a list of who is in a game party
 - As a user, I want to be able to be able to reduce the required size of the game party
+- As a user, I want to be able to load previous states (gathered enough people or not) of game parties, win rates of players, existing players and games, if I choose to
+- As a user, I want to be able to save current game parties, win rates from completed parties, existing players and games, if I choose to
