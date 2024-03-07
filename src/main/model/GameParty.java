@@ -1,10 +1,14 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.ArrayList;
 
 // Represents a Game Party with a max party size, current number of members,
 // game, and list of current members
-public class GameParty {
+public class GameParty implements Writable {
     private int maxPartySize;
     private int currentNumOfMembers;
     private final Game game;
@@ -79,5 +83,24 @@ public class GameParty {
     // getter
     public String getName() {
         return this.gamePartyName;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", gamePartyName);
+        json.put("maxPartySize", maxPartySize);
+        json.put("game", game);
+        json.put("status", status);
+        json.put("currentNumOfMembers", currentNumOfMembers);
+
+        JSONArray currentMembersJson = new JSONArray();
+        for (Person p : currentMembers) {
+            currentMembersJson.put(p.toJson());
+        }
+
+        json.put("currentMembers", currentMembersJson);
+
+        return json;
     }
 }

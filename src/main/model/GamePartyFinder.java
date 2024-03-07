@@ -1,9 +1,13 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.ArrayList;
 
 // Represents a GamePartyFinder with a list of people, games, and game parties
-public class GamePartyFinder {
+public class GamePartyFinder implements Writable {
     private ArrayList<Person> people;
     private ArrayList<Game> games;
     private ArrayList<GameParty> gameParties;
@@ -25,7 +29,7 @@ public class GamePartyFinder {
         ArrayList<String> gameNames = new ArrayList<>();
         games.forEach((g) -> gameNames.add(g.getName().toLowerCase()));
 
-        if (!getGameNames().contains(name.toLowerCase())) {
+        if (!gameNames.contains(name.toLowerCase())) {
             Game newGame = new Game(name, maxPartyMembers);
             games.add(newGame);
         }
@@ -90,6 +94,45 @@ public class GamePartyFinder {
         return peopleNames;
     }
 
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("people", peopleToJson());
+        json.put("games", gamesToJson());
+        json.put("game parties", partiesToJson());
+        return json;
+    }
 
+    // EFFECTS: returns things in this workroom as a JSON array
+    private JSONArray peopleToJson() {
+        JSONArray peopleJson = new JSONArray();
+
+        for (Person p : people) {
+            peopleJson.put(p.toJson());
+        }
+
+        return peopleJson;
+    }
+
+    // EFFECTS: returns things in this workroom as a JSON array
+    private JSONArray gamesToJson() {
+        JSONArray gamesJson = new JSONArray();
+
+        for (Game g : games) {
+            gamesJson.put(g.toJson());
+        }
+
+        return gamesJson;
+    }
+
+    // EFFECTS: returns things in this workroom as a JSON array
+    private JSONArray partiesToJson() {
+        JSONArray gamePartiesJson = new JSONArray();
+        for (GameParty gp : gameParties) {
+            gamePartiesJson.put(gp.toJson());
+        }
+
+        return gamePartiesJson;
+    }
 
 }

@@ -1,9 +1,13 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.ArrayList;
 
 // Represents a Person having a name, number of roles, list of roles, and list of Game Parties
-public class Person {
+public class Person implements Writable {
     private final String name;
     private int numOfRoles;
     private ArrayList<Game> roles;
@@ -78,6 +82,23 @@ public class Person {
 
     public ArrayList<Game> getRoles() {
         return this.roles;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("numOfRoles", numOfRoles);
+
+
+        JSONArray rolesJson = new JSONArray();
+        for (Game g : roles) {
+            rolesJson.put(g.toJson());
+        }
+
+        json.put("roles", rolesJson);
+
+        return json;
     }
 
 }

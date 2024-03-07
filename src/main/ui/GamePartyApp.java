@@ -1,17 +1,26 @@
 package ui;
 
 import model.*;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.ArrayList;
 
 // Game Party Maker application
 public class GamePartyApp {
+    private static final String JSON_STORE = "./data/gamepartyfinder.json";
     private GamePartyFinder partyFinder;
     private Scanner scanner;
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
 
     // EFFECTS: runs the Game Party application
-    public GamePartyApp() {
+    public GamePartyApp() throws FileNotFoundException {
+        jsonWriter = new JsonWriter(JSON_STORE);
+        jsonReader = new JsonReader(JSON_STORE);
         runGamePartyMaker();
     }
 
@@ -52,20 +61,49 @@ public class GamePartyApp {
         System.out.println("\t1. People");
         System.out.println("\t2. Games");
         System.out.println("\t3. GameParties");
+        System.out.println("\t4. Save");
+        System.out.println("\t5. Load");
         System.out.println("\tquit");
     }
 
     // MODIFIES: this
     // EFFECTS: processes user command
     private void processCommand(String command) {
-        if (command.equals("People")) {
+        if (command.equals("people")) {
             peopleActions();
-        } else if (command.equals("Games")) {
+        } else if (command.equals("games")) {
             gameActions();
-        } else if (command.equals("GameParties")) {
+        } else if (command.equals("game parties")) {
             gamePartyActions();
+        } else if (command.equals("save")) {
+            saveGamePartyFinder();
+        } else if (command.equals("load")) {
+            loadGamePartyFinder();
         } else {
             System.out.println("Selection not valid...");
+        }
+    }
+
+    // EFFECTS: saves the gamePartyFinder to file
+    private void saveGamePartyFinder() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(partyFinder);
+            jsonWriter.close();
+            System.out.println("Saved "  + " to " + JSON_STORE);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads gamePartyFinder from file
+    private void loadGamePartyFinder() {
+        try {
+            partyFinder = jsonReader.read();
+            System.out.println("Loaded " +  " from " + JSON_STORE);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
         }
     }
 

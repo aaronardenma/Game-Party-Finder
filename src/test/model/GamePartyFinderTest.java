@@ -42,11 +42,20 @@ public class GamePartyFinderTest {
         testGamePartyFinder.addGame("League", 5);
         assertEquals(1, testGamePartyFinder.getGames().size());
         assertTrue(testGamePartyFinder.getGameNames().contains("League"));
+        testGamePartyFinder.addGame("league", 5);
+        assertEquals(1, testGamePartyFinder.getGames().size());
+        assertTrue(testGamePartyFinder.getGameNames().contains("League"));
+        assertFalse(testGamePartyFinder.getGameNames().contains("league"));
         testGamePartyFinder.addGame("Valorant", 3);
         assertEquals(2, testGamePartyFinder.getGames().size());
         assertTrue(testGamePartyFinder.getGameNames().contains("Valorant"));
         testGamePartyFinder.addGame("VALORANT", 3);
         assertEquals(2, testGamePartyFinder.getGames().size());
+        assertFalse(testGamePartyFinder.getGameNames().contains("VALORANT"));
+        testGamePartyFinder.addGame("CS2", 5);
+        assertEquals(3, testGamePartyFinder.getGames().size());
+        assertTrue(testGamePartyFinder.getGameNames().contains("CS2"));
+
     }
 
     @Test

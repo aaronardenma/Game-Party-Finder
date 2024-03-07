@@ -1,9 +1,13 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.ArrayList;
 
 // Represents a Game with a name, list of players, and max party member integer
-public class Game {
+public class Game implements Writable {
     private String name;
     private ArrayList<Person> listOfPlayers;
     private int maxPartyMembers;
@@ -52,6 +56,22 @@ public class Game {
         if (listOfPlayers.contains(p)) {
             this.listOfPlayers.remove(p);
         }
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("maxPartyMembers", maxPartyMembers);
+
+        JSONArray listOfPlayersJson = new JSONArray();
+        for (Person p : listOfPlayers) {
+            listOfPlayersJson.put(p.toJson());
+        }
+
+        json.put("listOfPlayers", listOfPlayersJson);
+
+        return json;
     }
 
 }
