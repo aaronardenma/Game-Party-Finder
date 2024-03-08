@@ -7,6 +7,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
+// Represents a JSON writer class that can transfer information from all model package classes
+// to JSON format
+// Code was referenced from the Json Serialization Demo provided by the CPSC 210 Team
 public class JsonWriter {
     private static final int TAB = 4;
     private PrintWriter writer;

@@ -4,6 +4,7 @@
         "maxPartyMembers": 5
     }],
     "people": [{
+        "game stats": {},
         "roles": [{
             "name": "Valorant",
             "maxPartyMembers": 5
@@ -18,6 +19,7 @@
         "maxPartySize": 3,
         "name": "valorant party",
         "currentMembers": [{
+            "game stats": {},
             "roles": [{
                 "name": "Valorant",
                 "maxPartyMembers": 5

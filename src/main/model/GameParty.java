@@ -79,11 +79,13 @@ public class GameParty implements Writable {
         return this.gamePartyName;
     }
 
+    // setter
     public void setCurrentMembers(ArrayList<Person> members) {
         this.currentMembers = members;
     }
 
 
+    // EFFECTS: return JSON Object that captures gamePartyName, maxPartySize, game, and currentMembers as JSON Array
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
@@ -95,6 +97,8 @@ public class GameParty implements Writable {
         return json;
     }
 
+
+    // EFFECTS: returns Person as a JSON Array
     public JSONArray currentMembersToJson() {
         JSONArray currentMembersJson = new JSONArray();
         for (Person p : currentMembers) {

@@ -96,15 +96,15 @@ class PersonTest {
         assertEquals(0, testPerson.getGameStats().size());
 
         testPerson.updateWinRate(gameParty1, 3, 3);
-        assertTrue(testPerson.getGameStats().containsKey(person2));
-        assertEquals(100, testPerson.getGameStats().get(person2).get(0));
-        assertEquals(3, testPerson.getGameStats().get(person2).get(1));
-        assertEquals(3, testPerson.getGameStats().get(person2).get(2));
+        assertTrue(testPerson.getGameStats().containsKey(person2.getName()));
+        assertEquals(100, testPerson.getGameStats().get(person2.getName()).get(0));
+        assertEquals(3, testPerson.getGameStats().get(person2.getName()).get(1));
+        assertEquals(3, testPerson.getGameStats().get(person2.getName()).get(2));
 
-        assertTrue(testPerson.getGameStats().containsKey(person3));
-        assertEquals(100, testPerson.getGameStats().get(person3).get(0));
-        assertEquals(3, testPerson.getGameStats().get(person3).get(1));
-        assertEquals(3, testPerson.getGameStats().get(person3).get(2));
+        assertTrue(testPerson.getGameStats().containsKey(person3.getName()));
+        assertEquals(100, testPerson.getGameStats().get(person3.getName()).get(0));
+        assertEquals(3, testPerson.getGameStats().get(person3.getName()).get(1));
+        assertEquals(3, testPerson.getGameStats().get(person3.getName()).get(2));
     }
 
     @Test
@@ -121,28 +121,28 @@ class PersonTest {
         assertEquals(0, testPerson.getGameStats().size());
 
         testPerson.updateWinRate(gameParty1, 3, 3);
-        assertTrue(testPerson.getGameStats().containsKey(person2));
-        assertEquals(100, testPerson.getGameStats().get(person2).get(0));
-        assertEquals(3, testPerson.getGameStats().get(person2).get(1));
-        assertEquals(3, testPerson.getGameStats().get(person2).get(2));
+        assertTrue(testPerson.getGameStats().containsKey(person2.getName()));
+        assertEquals(100, testPerson.getGameStats().get(person2.getName()).get(0));
+        assertEquals(3, testPerson.getGameStats().get(person2.getName()).get(1));
+        assertEquals(3, testPerson.getGameStats().get(person2.getName()).get(2));
 
-        assertTrue(testPerson.getGameStats().containsKey(person3));
-        assertEquals(100, testPerson.getGameStats().get(person3).get(0));
-        assertEquals(3, testPerson.getGameStats().get(person3).get(1));
-        assertEquals(3, testPerson.getGameStats().get(person3).get(2));
+        assertTrue(testPerson.getGameStats().containsKey(person3.getName()));
+        assertEquals(100, testPerson.getGameStats().get(person3.getName()).get(0));
+        assertEquals(3, testPerson.getGameStats().get(person3.getName()).get(1));
+        assertEquals(3, testPerson.getGameStats().get(person3.getName()).get(2));
 
         assertEquals(2, testPerson.getGameStats().size());
 
         testPerson.updateWinRate(gameParty1, 0, 3);
-        assertTrue(testPerson.getGameStats().containsKey(person2));
-        assertEquals(50, testPerson.getGameStats().get(person2).get(0));
-        assertEquals(3, testPerson.getGameStats().get(person2).get(1));
-        assertEquals(6, testPerson.getGameStats().get(person2).get(2));
+        assertTrue(testPerson.getGameStats().containsKey(person2.getName()));
+        assertEquals(50, testPerson.getGameStats().get(person2.getName()).get(0));
+        assertEquals(3, testPerson.getGameStats().get(person2.getName()).get(1));
+        assertEquals(6, testPerson.getGameStats().get(person2.getName()).get(2));
 
-        assertTrue(testPerson.getGameStats().containsKey(person3));
-        assertEquals(50, testPerson.getGameStats().get(person3).get(0));
-        assertEquals(3, testPerson.getGameStats().get(person3).get(1));
-        assertEquals(6, testPerson.getGameStats().get(person3).get(2));
+        assertTrue(testPerson.getGameStats().containsKey(person3.getName()));
+        assertEquals(50, testPerson.getGameStats().get(person3.getName()).get(0));
+        assertEquals(3, testPerson.getGameStats().get(person3.getName()).get(1));
+        assertEquals(6, testPerson.getGameStats().get(person3.getName()).get(2));
     }
 
     @Test
@@ -158,12 +158,12 @@ class PersonTest {
         assertEquals(0, testPerson.getGameStats().size());
 
         testPerson.updateWinRate(gameParty1, 3, 3);
-        assertTrue(testPerson.getGameStats().containsKey(person2));
-        assertEquals(100, testPerson.getGameStats().get(person2).get(0));
-        assertEquals(3, testPerson.getGameStats().get(person2).get(1));
-        assertEquals(3, testPerson.getGameStats().get(person2).get(2));
+        assertTrue(testPerson.getGameStats().containsKey(person2.getName()));
+        assertEquals(100, testPerson.getGameStats().get(person2.getName()).get(0));
+        assertEquals(3, testPerson.getGameStats().get(person2.getName()).get(1));
+        assertEquals(3, testPerson.getGameStats().get(person2.getName()).get(2));
 
-        assertFalse(testPerson.getGameStats().containsKey(person3));
+        assertFalse(testPerson.getGameStats().containsKey(person3.getName()));
 
         GameParty newGameParty = new GameParty(game1, 3, "new party");
 
@@ -174,15 +174,15 @@ class PersonTest {
         assertEquals(1, testPerson.getGameStats().size());
 
         testPerson.updateWinRate(newGameParty, 1, 3);
-        assertTrue(testPerson.getGameStats().containsKey(person2));
-        assertEquals(67, testPerson.getGameStats().get(person2).get(0));
-        assertEquals(4, testPerson.getGameStats().get(person2).get(1));
-        assertEquals(6, testPerson.getGameStats().get(person2).get(2));
+        assertTrue(testPerson.getGameStats().containsKey(person2.getName()));
+        assertEquals(67, testPerson.getGameStats().get(person2.getName()).get(0));
+        assertEquals(4, testPerson.getGameStats().get(person2.getName()).get(1));
+        assertEquals(6, testPerson.getGameStats().get(person2.getName()).get(2));
 
-        assertTrue(testPerson.getGameStats().containsKey(person3));
-        assertEquals(33, testPerson.getGameStats().get(person3).get(0));
-        assertEquals(1, testPerson.getGameStats().get(person3).get(1));
-        assertEquals(3, testPerson.getGameStats().get(person3).get(2));
+        assertTrue(testPerson.getGameStats().containsKey(person3.getName()));
+        assertEquals(33, testPerson.getGameStats().get(person3.getName()).get(0));
+        assertEquals(1, testPerson.getGameStats().get(person3.getName()).get(1));
+        assertEquals(3, testPerson.getGameStats().get(person3.getName()).get(2));
         assertEquals(2, testPerson.getGameStats().size());
     }
 }

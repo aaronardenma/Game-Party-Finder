@@ -7,10 +7,10 @@ import model.Person;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// Code was referenced from the Json Serialization Demo provided by the CPSC 210 Team
 public class JavaReaderTest {
 
     @Test

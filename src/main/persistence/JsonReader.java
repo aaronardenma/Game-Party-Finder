@@ -16,7 +16,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
-// Represents
+// Represents a JSON reader class that can transfer information from JSON files to
+// GamePartyFinder classes
+// Code was referenced from the Json Serialization Demo provided by the CPSC 210 Team
 public class JsonReader {
     private String source;
 
@@ -25,7 +27,7 @@ public class JsonReader {
         this.source = source;
     }
 
-    // EFFECTS: reads workroom from file and returns it;
+    // EFFECTS: reads GamePartyFinder from file and returns it;
     // throws IOException if an error occurs reading data from file
     public GamePartyFinder read() throws IOException {
         String jsonData = readFile(source);
@@ -44,7 +46,7 @@ public class JsonReader {
         return contentBuilder.toString();
     }
 
-    // EFFECTS: parses workroom from JSON object and returns it
+    // EFFECTS: parses GamePartyFinder from JSON object and returns it
     private GamePartyFinder parseGamePartyFinder(JSONObject jsonObject) {
         GamePartyFinder gpf = new GamePartyFinder();
         addListOfPeople(gpf, jsonObject);
@@ -77,7 +79,8 @@ public class JsonReader {
         gpf.addPerson(person);
     }
 
-    //
+    // MODIFIES: gameStatsJson
+    // EFFECTS: Converts JSON Object to a HashMap<String, ArrayList<Float>>
     private HashMap<String, ArrayList<Float>> toHashMap(JSONObject gameStatsJson) {
         HashMap<String, ArrayList<Float>> gameStats = new HashMap<>();
         Iterator<String> keys = gameStatsJson.keys();

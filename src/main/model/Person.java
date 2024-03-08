@@ -77,6 +77,11 @@ public class Person implements Writable {
         return this.gameStats;
     }
 
+    // MODIFIES: this
+    // EFFECTS: get a list of members in gameParty and create new list that does not include this.
+    // if a person is not in gameStats, put person in gameStats as key with ArrayList<Float> as value with
+    // win rate, numOfWins, and numGamesPlayed with that person. If person is in gameStats, remove key and
+    // replace with add numGamesPlayed, add numOfWins, and new win rate.
     public void updateWinRate(GameParty gameParty, float numOfWins, float numGamesPlayed) {
         ArrayList<Person> members = new ArrayList<>();
         gameParty.getCurrentMembers().forEach((p) -> members.add(p));
@@ -104,6 +109,8 @@ public class Person implements Writable {
         }
     }
 
+
+    // EFFECTS: return JSON Object that captures name, roles as JSON Array, and game stats as JSON Object
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
@@ -114,6 +121,7 @@ public class Person implements Writable {
         return json;
     }
 
+    // EFFECTS: returns games in roles as a JSON array
     public JSONArray rolesToJson() {
         JSONArray rolesJson = new JSONArray();
         for (Game g : roles) {
@@ -122,6 +130,7 @@ public class Person implements Writable {
         return rolesJson;
     }
 
+    // EFFECTS: returns gameStats HashMap as a JSON Object
     public JSONObject gameStatsToJson() {
         JSONObject jsonMap = new JSONObject();
         for (Map.Entry<String, ArrayList<Float>> entry : gameStats.entrySet()) {

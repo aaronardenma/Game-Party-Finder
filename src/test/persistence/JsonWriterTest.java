@@ -10,6 +10,7 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// Code was referenced from the Json Serialization Demo provided by the CPSC 210 Team
 public class JsonWriterTest {
 
     @Test

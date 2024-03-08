@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 // Game Party Maker application
 public class GamePartyApp {
-    private static final String JSON_STORE = "./data/testReaderGamePartyFinder.json";
+    private static final String JSON_STORE = "./data/testWriterGamePartyFinder.json";
     private GamePartyFinder partyFinder;
     private Scanner scanner;
     private JsonWriter jsonWriter;
@@ -111,7 +111,7 @@ public class GamePartyApp {
     private void peopleActions() {
         System.out.println("Please select an action: "
                 + "(\n1. Create \n2. Add to Game Party \n3. Add Role"
-                + "\n4. Delete Role \n5. See all Roles \n6. back");
+                + "\n4. Delete Role \n5. See all Roles \n6. View Game Stats \n7. back");
         int command = scanner.nextInt();
 
         if (command == 1) {
@@ -125,6 +125,8 @@ public class GamePartyApp {
         } else if (command == 5) {
             viewRoles();
         } else if (command == 6) {
+            viewGameStats();
+        } else if (command == 7) {
             displayMenu();
         }
     }
@@ -162,7 +164,6 @@ public class GamePartyApp {
     private void deleteRole() {
         System.out.println("Which person's roles would you like to change?");
         Person person = getPersonFromUserResponse();
-
         System.out.println("Which role should be deleted?");
         System.out.println(getRoleNames(person));
         int roleIndex = scanner.nextInt() - 1;
@@ -175,9 +176,7 @@ public class GamePartyApp {
     // EFFECTS: view all roles for Person determined by user Response
     public void viewRoles() {
         System.out.println("Whose roles would you like to see?");
-        System.out.println(partyFinder.getPeopleNames());
-        int peopleIndex = scanner.nextInt() - 1;
-        Person person = partyFinder.getPeople().get(peopleIndex);
+        Person person = getPersonFromUserResponse();
         ArrayList<Game> roles = person.getRoles();
         ArrayList<String> roleNames = new ArrayList<>();
         roles.forEach(game -> roleNames.add(game.getName()));
@@ -191,6 +190,14 @@ public class GamePartyApp {
         roles.forEach((game) -> roleNames.add(game.getName()));
 
         return roleNames;
+    }
+
+    // EFFECTS: returns a list of game statistics that the person has with others
+    private void viewGameStats() {
+        System.out.println("Whose Game Statistics would you like to see?");
+        Person person = getPersonFromUserResponse();
+        System.out.println("[WinRate (%), # of Wins, # Games Played]");
+        System.out.println(person.getGameStats());
     }
 
     // EFFECTS: displays a list of actions to the user involving the Game class

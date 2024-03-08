@@ -12,97 +12,113 @@ public class GamePartyFinder implements Writable {
     private ArrayList<Game> games;
     private ArrayList<GameParty> gameParties;
 
+    // EFFECTS: people is an empty ArrayList<Person>
+    // games is an empty ArrayList<Game>
+    // gameParties is an empty ArrayList<GameParty>
     public GamePartyFinder() {
         this.people = new ArrayList<>();
         this.games = new ArrayList<>();
         this.gameParties = new ArrayList<>();
     }
 
+    // MODIFIES: this
+    // EFFECTS: if people ArrayList<Person> does not contain person, add to list
     public void addPerson(Person person) {
-//        Person newPerson = new Person(name);
         if (!getPeople().contains(person)) {
             people.add(person);
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: if games ArrayList<Game> does not contain game, add to list
     public void addGame(Game game) {
         ArrayList<String> gameNames = new ArrayList<>();
         games.forEach((g) -> gameNames.add(g.getName().toLowerCase()));
 
         if (!gameNames.contains(game.getName().toLowerCase())) {
-//            Game newGame = new Game(name, maxPartyMembers);
             games.add(game);
         }
 
     }
 
-//    public void createGameParty(Game game, int maxPartySize, String partyName) {
-//        GameParty newGameParty = new GameParty(game, maxPartySize, partyName);
-//        gameParties.add(newGameParty);
-//    }
-
+    // MODIFIES: this
+    // EFFECTS: if gameParty ArrayList<GameParty> does not contain gameParty, add to list
     public void addGameParty(GameParty gameParty) {
         ArrayList<String> partyNames = new ArrayList<>();
         gameParties.forEach((gp) -> partyNames.add(gp.getName().toLowerCase()));
-//        GameParty newGameParty = new GameParty(game, maxPartySize, partyName);
         if (!partyNames.contains(gameParty.getName().toLowerCase())) {
             gameParties.add(gameParty);
         }
     }
 
-    // MODIFIES: this
+    // MODIFIES: gameParty
     // EFFECTS: adds person to gameParty
     public void addPersonToGameParty(Person person, GameParty gameParty) {
         gameParty.addMember(person);
     }
 
+    // MODIFIES: person
     // EFFECTS: add game to list of roles a person has
     public void addRoleToPerson(Person person, Game game) {
         person.addRole(game);
     }
 
+    // MODIFIES: person
+    // EFFECTS: remove game from list of roles person has
     public void deleteRoleFromPerson(Person person, Game game) {
         person.deleteRole(game);
     }
 
+    // EFFECTS: return list of roles from person
     public ArrayList<Game> getRolesFromPerson(Person person) {
         return person.getRoles();
     }
 
+    // MODIFIES: gameParty
+    // EFFECTS: change gameParty max party size to newSize
     public void changePartySize(GameParty gameParty, int newSize) {
         gameParty.changeTotalSize(newSize);
     }
 
+    // getter
     public ArrayList<GameParty> getGameParties() {
         return this.gameParties;
     }
 
+    // EFFECTS: get names of all GameParty in gameParties in a list
     public ArrayList<String> getGamePartyNames() {
         ArrayList<String> gamePartyNames = new ArrayList<>();
         gameParties.forEach((gp) -> gamePartyNames.add(gp.getName()));
         return gamePartyNames;
     }
 
+    // getter
     public ArrayList<Game> getGames() {
         return this.games;
     }
 
+    // EFFECTS: get names of all Game in games in a list
     public ArrayList<String> getGameNames() {
         ArrayList<String> gameNames = new ArrayList<>();
         games.forEach((g) -> gameNames.add(g.getName()));
         return gameNames;
     }
 
+    // getter
     public ArrayList<Person> getPeople() {
         return this.people;
     }
 
+    // EFFECTS: get names of all Person in people in a list
     public ArrayList<String> getPeopleNames() {
         ArrayList<String> peopleNames = new ArrayList<>();
         people.forEach((p) -> peopleNames.add(p.getName()));
         return peopleNames;
     }
 
+    // MODIFIES: this
+    // EFFECTS: update game statistics for every person in gameParty and remove gameParty from
+    // this.gameParties
     public void endSession(GameParty gameParty, float numOfWins, float numGamesPlayed) {
         ArrayList<Person> members = gameParty.getCurrentMembers();
         for (int i = 0; i < members.size(); i++) {
@@ -112,7 +128,7 @@ public class GamePartyFinder implements Writable {
         gameParties.remove(gameParty);
     }
 
-
+    // EFFECTS: return JSON Object that captures people, games, and game parties as JSON arrays
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
@@ -122,7 +138,7 @@ public class GamePartyFinder implements Writable {
         return json;
     }
 
-    // EFFECTS: returns things in this workroom as a JSON array
+    // EFFECTS: returns people in this GamePartyFinder as a JSON array
     private JSONArray peopleToJson() {
         JSONArray peopleJson = new JSONArray();
 
@@ -133,7 +149,7 @@ public class GamePartyFinder implements Writable {
         return peopleJson;
     }
 
-    // EFFECTS: returns things in this workroom as a JSON array
+    // EFFECTS: returns games in this GamePartyFinder as a JSON array
     private JSONArray gamesToJson() {
         JSONArray gamesJson = new JSONArray();
 
@@ -144,7 +160,7 @@ public class GamePartyFinder implements Writable {
         return gamesJson;
     }
 
-    // EFFECTS: returns things in this workroom as a JSON array
+    // EFFECTS: returns gameParties in this GamePartyFinder as a JSON array
     private JSONArray partiesToJson() {
         JSONArray gamePartiesJson = new JSONArray();
         for (GameParty gp : gameParties) {
