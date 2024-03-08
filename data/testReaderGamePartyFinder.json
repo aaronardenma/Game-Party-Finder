@@ -1,0 +1,28 @@
+{
+    "games": [{
+        "name": "Valorant",
+        "maxPartyMembers": 5
+    }],
+    "people": [{
+        "roles": [{
+            "name": "Valorant",
+            "maxPartyMembers": 5
+        }],
+        "name": "Paolo"
+    }],
+    "game parties": [{
+        "game": {
+            "name": "Valorant",
+            "maxPartyMembers": 5
+        },
+        "maxPartySize": 3,
+        "name": "valorant party",
+        "currentMembers": [{
+            "roles": [{
+                "name": "Valorant",
+                "maxPartyMembers": 5
+            }],
+            "name": "Paolo"
+        }]
+    }]
+}

@@ -5,12 +5,15 @@ import org.json.JSONObject;
 import persistence.Writable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import static java.lang.Math.round;
 
 // Represents a Person having a name, number of roles, list of roles, and list of Game Parties
 public class Person implements Writable {
     private final String name;
     private ArrayList<Game> roles;
-//    private ArrayList<GameParty> gameParties;
+    private HashMap<Person, ArrayList<Float>> gameStats;
 
     // REQUIRES: name has a non-zero length
     // EFFECTS: name on Person is set to name; numOfRoles is set to 0;
@@ -19,7 +22,7 @@ public class Person implements Writable {
     public Person(String name) {
         this.name = name;
         this.roles = new ArrayList<>();
-//        this.gameParties = new ArrayList<>();
+        this.gameStats = new HashMap<>();
     }
 
     // getter
@@ -34,22 +37,6 @@ public class Person implements Writable {
         return roles.size();
     }
 
-    // getter
-
-//    public ArrayList<GameParty> getGameParties() {
-//        return this.gameParties;
-//    }
-
-    // MODIFIES: this, and GameParty
-    // EFFECTS: Adds this GameParty to list of gameParties and adds Person to GameParty currentMembers
-    // gameParties does not contain the GameParty
-
-//    public void addToGameParty(GameParty gp) {
-//        if (!gameParties.contains(gp)) {
-//            gp.addMember(this);
-//            gameParties.add(gp);
-//        }
-//    }
 
     // MODIFIES: this
     // EFFECTS: Add Game to list of roles and increment numOfRoles by 1 if list of roles
@@ -58,18 +45,15 @@ public class Person implements Writable {
     public void addRole(Game g) {
         if (!roles.contains(g)) {
             this.roles.add(g);
-//            g.addPersonToGame(this);
         }
     }
 
     // MODIFIES: this
-    // EFFECTS: Removes Game from list of roles and reduces numOfRoles by 1 if list of roles
-    // contains the Game
+    // EFFECTS: Removes Game from list of roles if list of roles contains the Game
 
     public void deleteRole(Game g) {
         if (roles.contains(g)) {
             this.roles.remove(g);
-//            g.removePersonFromGame(this);
         }
 
     }
@@ -86,11 +70,38 @@ public class Person implements Writable {
         this.roles = newRoles;
     }
 
-    // setter
+    // getter
 
-//    public void setGameParties(ArrayList<GameParty> newParties) {
-//        this.gameParties = newParties;
-//    }
+    public HashMap<Person, ArrayList<Float>> getGameStats() {
+        return this.gameStats;
+    }
+
+    public void updateWinRate(GameParty gameParty, float numOfWins, float numGamesPlayed) {
+        ArrayList<Person> members = new ArrayList<>();
+        gameParty.getCurrentMembers().forEach((p) -> members.add(p));
+        members.remove(this);
+
+        for (Person p : members) {
+            ArrayList<Float> newStats = new ArrayList<>();
+            if (getGameStats().containsKey(p)) {
+                ArrayList<Float> stats = gameStats.get(p);
+                float newNumOfWins = stats.get(1) + numOfWins;
+                float newNumGamesPlayed = stats.get(2) + numGamesPlayed;
+                float newWinRate = round((newNumOfWins / newNumGamesPlayed) * 100);
+                this.gameStats.remove(p);
+                newStats.add(newWinRate);
+                newStats.add(newNumOfWins);
+                newStats.add(newNumGamesPlayed);
+                this.gameStats.put(p, newStats);
+            } else {
+                float winRate = round((numOfWins / numGamesPlayed) * 100);
+                newStats.add(winRate);
+                newStats.add(numOfWins);
+                newStats.add(numGamesPlayed);
+            }
+            this.gameStats.put(p, newStats);
+        }
+    }
 
     @Override
     public JSONObject toJson() {

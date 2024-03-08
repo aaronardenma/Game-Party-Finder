@@ -103,6 +103,16 @@ public class GamePartyFinder implements Writable {
         return peopleNames;
     }
 
+    public void endSession(GameParty gameParty, float numOfWins, float numGamesPlayed) {
+        ArrayList<Person> members = gameParty.getCurrentMembers();
+        for (int i = 0; i < members.size(); i++) {
+            Person p = members.get(i);
+            p.updateWinRate(gameParty, numOfWins, numGamesPlayed);
+        }
+        gameParties.remove(gameParty);
+    }
+
+
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();

@@ -221,7 +221,7 @@ public class GamePartyApp {
     private void gamePartyActions() {
         System.out.println("Please select an action: "
                 + "(\n1. Create New Game Party\n2. View people in Game Party"
-                + "\n3. Change Max Party Size\n4. back");
+                + "\n3. Change Max Party Size\n4. End Game Party Session \n 5. back");
         int command = scanner.nextInt();
 
         if (command == 1) {
@@ -231,6 +231,8 @@ public class GamePartyApp {
         } else if (command == 3) {
             changeGamePartyMaxSize();
         } else if (command == 4) {
+            endGamePartySession();
+        } else if (command == 5) {
             displayMenu();
         }
     }
@@ -267,6 +269,18 @@ public class GamePartyApp {
         System.out.println("Set new size of the party");
         int newSize = scanner.nextInt();
         partyFinder.changePartySize(gamePartySelected, newSize);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Allows user to update winrate statistics with one another and remove game party
+    private void endGamePartySession() {
+        System.out.println("Which of your Game Parties would you like to reduce its size?");
+        GameParty gamePartySelected = getGamePartyFromUserResponse();
+        System.out.println("How many games did you play?");
+        int numGamesPlayed = scanner.nextInt();
+        System.out.println("How many games did you win?");
+        int numGamesWon = scanner.nextInt();
+        partyFinder.endSession(gamePartySelected, numGamesWon, numGamesPlayed);
     }
 
     // EFFECTS: return a Person specified by user response from a list of people in GamePartyFinder

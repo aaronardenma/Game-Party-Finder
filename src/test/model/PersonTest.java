@@ -3,7 +3,7 @@ package model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class PersonTest {
     private Person testPerson;
@@ -120,5 +120,109 @@ class PersonTest {
         assertEquals(1, testPerson.getNumOfRoles());
         testPerson.deleteRole(game1);
         assertEquals(0, testPerson.getNumOfRoles());
+    }
+
+    @Test
+    public void testUpdateWinRateDoNotContainAllKeys() {
+        Person person2 = new Person("Renee");
+        Person person3 = new Person("Paolo");
+        testPerson.addRole(game1);
+        person2.addRole(game1);
+        person3.addRole(game1);
+        gameParty1.addMember(testPerson);
+        gameParty1.addMember(person2);
+        gameParty1.addMember(person3);
+
+        assertEquals(0, testPerson.getGameStats().size());
+
+        testPerson.updateWinRate(gameParty1, 3, 3);
+        assertTrue(testPerson.getGameStats().containsKey(person2));
+        assertEquals(100, testPerson.getGameStats().get(person2).get(0));
+        assertEquals(3, testPerson.getGameStats().get(person2).get(1));
+        assertEquals(3, testPerson.getGameStats().get(person2).get(2));
+
+        assertTrue(testPerson.getGameStats().containsKey(person3));
+        assertEquals(100, testPerson.getGameStats().get(person3).get(0));
+        assertEquals(3, testPerson.getGameStats().get(person3).get(1));
+        assertEquals(3, testPerson.getGameStats().get(person3).get(2));
+    }
+
+    @Test
+    public void testUpdateWinRateContainsAllKeys() {
+        Person person2 = new Person("Renee");
+        Person person3 = new Person("Paolo");
+        testPerson.addRole(game1);
+        person2.addRole(game1);
+        person3.addRole(game1);
+        gameParty1.addMember(testPerson);
+        gameParty1.addMember(person2);
+        gameParty1.addMember(person3);
+
+        assertEquals(0, testPerson.getGameStats().size());
+
+        testPerson.updateWinRate(gameParty1, 3, 3);
+        assertTrue(testPerson.getGameStats().containsKey(person2));
+        assertEquals(100, testPerson.getGameStats().get(person2).get(0));
+        assertEquals(3, testPerson.getGameStats().get(person2).get(1));
+        assertEquals(3, testPerson.getGameStats().get(person2).get(2));
+
+        assertTrue(testPerson.getGameStats().containsKey(person3));
+        assertEquals(100, testPerson.getGameStats().get(person3).get(0));
+        assertEquals(3, testPerson.getGameStats().get(person3).get(1));
+        assertEquals(3, testPerson.getGameStats().get(person3).get(2));
+
+        assertEquals(2, testPerson.getGameStats().size());
+
+        testPerson.updateWinRate(gameParty1, 0, 3);
+        assertTrue(testPerson.getGameStats().containsKey(person2));
+        assertEquals(50, testPerson.getGameStats().get(person2).get(0));
+        assertEquals(3, testPerson.getGameStats().get(person2).get(1));
+        assertEquals(6, testPerson.getGameStats().get(person2).get(2));
+
+        assertTrue(testPerson.getGameStats().containsKey(person3));
+        assertEquals(50, testPerson.getGameStats().get(person3).get(0));
+        assertEquals(3, testPerson.getGameStats().get(person3).get(1));
+        assertEquals(6, testPerson.getGameStats().get(person3).get(2));
+    }
+
+    @Test
+    public void testUpdateWinRateContainsPartialKeys() {
+        Person person2 = new Person("Renee");
+        Person person3 = new Person("Paolo");
+        testPerson.addRole(game1);
+        person2.addRole(game1);
+        person3.addRole(game1);
+        gameParty1.addMember(testPerson);
+        gameParty1.addMember(person2);
+
+        assertEquals(0, testPerson.getGameStats().size());
+
+        testPerson.updateWinRate(gameParty1, 3, 3);
+        assertTrue(testPerson.getGameStats().containsKey(person2));
+        assertEquals(100, testPerson.getGameStats().get(person2).get(0));
+        assertEquals(3, testPerson.getGameStats().get(person2).get(1));
+        assertEquals(3, testPerson.getGameStats().get(person2).get(2));
+
+        assertFalse(testPerson.getGameStats().containsKey(person3));
+
+        GameParty newGameParty = new GameParty(game1, 3, "new party");
+
+        newGameParty.addMember(testPerson);
+        newGameParty.addMember(person2);
+        newGameParty.addMember(person3);
+
+        assertEquals(1, testPerson.getGameStats().size());
+
+        testPerson.updateWinRate(newGameParty, 1, 3);
+        assertTrue(testPerson.getGameStats().containsKey(person2));
+        assertEquals(67, testPerson.getGameStats().get(person2).get(0));
+        assertEquals(4, testPerson.getGameStats().get(person2).get(1));
+        assertEquals(6, testPerson.getGameStats().get(person2).get(2));
+
+        assertTrue(testPerson.getGameStats().containsKey(person3));
+        assertEquals(33, testPerson.getGameStats().get(person3).get(0));
+        assertEquals(1, testPerson.getGameStats().get(person3).get(1));
+        assertEquals(3, testPerson.getGameStats().get(person3).get(2));
+        assertEquals(2, testPerson.getGameStats().size());
     }
 }

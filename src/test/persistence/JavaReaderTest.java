@@ -71,4 +71,5 @@ public class JavaReaderTest {
             fail("Couldn't read from file");
         }
     }
+
 }

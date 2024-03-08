@@ -65,11 +65,9 @@ public class JsonReader {
     private void addPerson(GamePartyFinder gpf, JSONObject jsonObject) {
         String name = jsonObject.getString("name");
         JSONArray roles = jsonObject.getJSONArray("roles");
-//        JSONArray gameParties = jsonObject.getJSONArray("game parties");
 
         Person person = new Person(name);
         person.setRoles(toArrayGameList(roles));
-//        person.setGameParties(toArrayGamePartyList(gameParties));
 
         gpf.addPerson(person);
     }
@@ -89,9 +87,7 @@ public class JsonReader {
     private void addGame(GamePartyFinder gpf, JSONObject jsonObject) {
         String name = jsonObject.getString("name");
         int maxPartySize = jsonObject.getInt("maxPartyMembers");
-//        JSONArray listOfPlayers = jsonObject.getJSONArray("listOfPlayers");
         Game game = new Game(name, maxPartySize);
-//        game.setListOfPlayers(toArrayPersonList(listOfPlayers));
         gpf.addGame(game);
     }
 
@@ -114,9 +110,7 @@ public class JsonReader {
 
         String gameName = jsonObject.getJSONObject("game").getString("name");
         int gameMaxPartyMembers = jsonObject.getJSONObject("game").getInt("maxPartyMembers");
-//        JSONArray gameListOfPlayers = jsonObject.getJSONObject("game").getJSONArray("listOfPlayers");
         Game game = new Game(gameName, gameMaxPartyMembers);
-//        game.setListOfPlayers(toArrayPersonList(gameListOfPlayers));
 
         GameParty gameParty = new GameParty(game, maxPartySize, name);
         gameParty.setCurrentMembers(toArrayPersonList(currentMembers));
@@ -141,37 +135,10 @@ public class JsonReader {
         for (int i = 0; i < array.length(); i++) {
             String name = array.getJSONObject(i).getString("name");
             int maxPartySize = array.getJSONObject(i).getInt("maxPartyMembers");
-//            JSONArray listOfPlayersJson = array.getJSONObject(i).getJSONArray("listOfPlayers");
             Game game = new Game(name, maxPartySize);
-//            game.setListOfPlayers(toArrayPersonList(listOfPlayersJson));
             listGames.add(game);
         }
         return listGames;
     }
 
-    private ArrayList<GameParty> toArrayGamePartyList(JSONArray array) {
-        ArrayList<GameParty> listGameParties = new ArrayList<>();
-        for (int i = 0; i < array.length(); i++) {
-            String name = array.getJSONObject(i).getString("name");
-            int maxPartySize = array.getJSONObject(i).getInt("maxPartySize");
-            JSONArray currentMembers = array.getJSONObject(i).getJSONArray("currentMembers");
-            JSONObject gameJson = array.getJSONObject(i).getJSONObject("game");
-            Game game = createGameFromJsonObject(gameJson);
-
-            GameParty gameParty = new GameParty(game, maxPartySize, name);
-            gameParty.setCurrentMembers(toArrayPersonList(currentMembers));
-            listGameParties.add(gameParty);
-        }
-        return listGameParties;
-    }
-
-    private Game createGameFromJsonObject(JSONObject gameObject) {
-        String gameName = gameObject.getString("name");
-        int maxPartySize = gameObject.getInt("maxPartyMembers");
-//        JSONArray listOfPlayers = gameObject.getJSONArray("listOfPlayers");
-        Game game = new Game(gameName, maxPartySize);
-//        game.setListOfPlayers(toArrayPersonList(listOfPlayers));
-
-        return game;
-    }
 }

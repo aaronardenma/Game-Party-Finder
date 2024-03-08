@@ -1,0 +1,28 @@
+{
+    "games": [{
+        "name": "League of Legends",
+        "maxPartyMembers": 5
+    }],
+    "people": [{
+        "roles": [{
+            "name": "League of Legends",
+            "maxPartyMembers": 5
+        }],
+        "name": "Aaron"
+    }],
+    "game parties": [{
+        "game": {
+            "name": "League of Legends",
+            "maxPartyMembers": 5
+        },
+        "maxPartySize": 5,
+        "name": "party 1",
+        "currentMembers": [{
+            "roles": [{
+                "name": "League of Legends",
+                "maxPartyMembers": 5
+            }],
+            "name": "Aaron"
+        }]
+    }]
+}
