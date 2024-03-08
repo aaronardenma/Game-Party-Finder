@@ -3,26 +3,64 @@
         "name": "League of Legends",
         "maxPartyMembers": 5
     }],
-    "people": [{
-        "roles": [{
-            "name": "League of Legends",
-            "maxPartyMembers": 5
-        }],
-        "name": "Aaron"
-    }],
-    "game parties": [{
-        "game": {
-            "name": "League of Legends",
-            "maxPartyMembers": 5
-        },
-        "maxPartySize": 5,
-        "name": "party 1",
-        "currentMembers": [{
+    "people": [
+        {
+            "game stats": {
+                "Paolo": [
+                    100,
+                    3,
+                    3
+                ],
+                "Renee": [
+                    100,
+                    3,
+                    3
+                ]
+            },
             "roles": [{
                 "name": "League of Legends",
                 "maxPartyMembers": 5
             }],
             "name": "Aaron"
-        }]
-    }]
+        },
+        {
+            "game stats": {
+                "Aaron": [
+                    100,
+                    3,
+                    3
+                ],
+                "Renee": [
+                    100,
+                    3,
+                    3
+                ]
+            },
+            "roles": [{
+                "name": "League of Legends",
+                "maxPartyMembers": 5
+            }],
+            "name": "Paolo"
+        },
+        {
+            "game stats": {
+                "Aaron": [
+                    100,
+                    3,
+                    3
+                ],
+                "Paolo": [
+                    100,
+                    3,
+                    3
+                ]
+            },
+            "roles": [{
+                "name": "League of Legends",
+                "maxPartyMembers": 5
+            }],
+            "name": "Renee"
+        }
+    ],
+    "game parties": []
 }

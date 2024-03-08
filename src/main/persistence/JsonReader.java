@@ -12,8 +12,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.stream.Stream;
 
+// Represents
 public class JsonReader {
     private String source;
 
@@ -65,11 +68,30 @@ public class JsonReader {
     private void addPerson(GamePartyFinder gpf, JSONObject jsonObject) {
         String name = jsonObject.getString("name");
         JSONArray roles = jsonObject.getJSONArray("roles");
+        JSONObject gameStats = jsonObject.getJSONObject("game stats");
 
         Person person = new Person(name);
         person.setRoles(toArrayGameList(roles));
+        person.setGameStats(toHashMap(gameStats));
 
         gpf.addPerson(person);
+    }
+
+    //
+    private HashMap<String, ArrayList<Float>> toHashMap(JSONObject gameStatsJson) {
+        HashMap<String, ArrayList<Float>> gameStats = new HashMap<>();
+        Iterator<String> keys = gameStatsJson.keys();
+        while (keys.hasNext()) {
+            String key = keys.next();
+            JSONArray jsonArray = gameStatsJson.getJSONArray(key);
+            ArrayList<Float> list = new ArrayList<>();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                Number value = (Number) jsonArray.get(i);
+                list.add(value.floatValue());
+            }
+            gameStats.put(key, list);
+        }
+        return gameStats;
     }
 
     // MODIFIES: gpf

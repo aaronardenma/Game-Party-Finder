@@ -130,7 +130,7 @@ public class GamePartyFinderTest {
         assertTrue(testGamePartyFinder.getGamePartyNames().contains("party 1"));
         testGamePartyFinder.addGameParty(party2);
         assertEquals(2, testGamePartyFinder.getGamePartyNames().size());
-        assertTrue(testGamePartyFinder.getGamePartyNames().contains("party 3"));
+        assertTrue(testGamePartyFinder.getGamePartyNames().contains("party 2"));
     }
 
     @Test

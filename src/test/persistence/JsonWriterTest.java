@@ -49,12 +49,21 @@ public class JsonWriterTest {
             GamePartyFinder gpf = new GamePartyFinder();
             Game game = new Game("League of Legends", 5);
             Person person = new Person("Aaron");
+            Person person2 = new Person("Paolo");
+            Person person3 = new Person("Renee");
             GameParty party = new GameParty(game, 5, "party 1");
             gpf.addPerson(person);
+            gpf.addPerson(person2);
+            gpf.addPerson(person3);
             gpf.addGame(game);
             gpf.addGameParty(party);
             gpf.addRoleToPerson(person, game);
+            gpf.addRoleToPerson(person2, game);
+            gpf.addRoleToPerson(person3, game);
             gpf.addPersonToGameParty(person, party);
+            gpf.addPersonToGameParty(person2, party);
+            gpf.addPersonToGameParty(person3, party);
+            gpf.endSession(party, 3, 3);
             JsonWriter writer = new JsonWriter("./data/testWriterGamePartyFinder.json");
             writer.open();
             writer.write(gpf);
@@ -62,12 +71,12 @@ public class JsonWriterTest {
 
             JsonReader reader = new JsonReader("./data/testWriterGamePartyFinder.json");
             gpf = reader.read();
-            assertEquals(1, gpf.getPeople().size());
+            assertEquals(3, gpf.getPeople().size());
             assertTrue(gpf.getPeopleNames().contains("Aaron"));
             assertEquals(1, gpf.getGames().size());
             assertTrue(gpf.getGameNames().contains("League of Legends"));
-            assertEquals(1, gpf.getGameParties().size());
-            assertTrue(gpf.getGamePartyNames().contains("party 1"));
+            assertEquals(0, gpf.getGameParties().size());
+            assertFalse(gpf.getGamePartyNames().contains("party 1"));
 
         } catch (IOException e) {
             fail("Exception should not have been thrown");

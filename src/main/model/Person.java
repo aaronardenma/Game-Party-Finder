@@ -6,6 +6,7 @@ import persistence.Writable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import static java.lang.Math.round;
 
@@ -13,7 +14,7 @@ import static java.lang.Math.round;
 public class Person implements Writable {
     private final String name;
     private ArrayList<Game> roles;
-    private HashMap<Person, ArrayList<Float>> gameStats;
+    private HashMap<String, ArrayList<Float>> gameStats;
 
     // REQUIRES: name has a non-zero length
     // EFFECTS: name on Person is set to name; numOfRoles is set to 0;
@@ -72,7 +73,7 @@ public class Person implements Writable {
 
     // getter
 
-    public HashMap<Person, ArrayList<Float>> getGameStats() {
+    public HashMap<String, ArrayList<Float>> getGameStats() {
         return this.gameStats;
     }
 
@@ -83,23 +84,23 @@ public class Person implements Writable {
 
         for (Person p : members) {
             ArrayList<Float> newStats = new ArrayList<>();
-            if (getGameStats().containsKey(p)) {
-                ArrayList<Float> stats = gameStats.get(p);
+            if (getGameStats().containsKey(p.getName())) {
+                ArrayList<Float> stats = gameStats.get(p.getName());
                 float newNumOfWins = stats.get(1) + numOfWins;
                 float newNumGamesPlayed = stats.get(2) + numGamesPlayed;
                 float newWinRate = round((newNumOfWins / newNumGamesPlayed) * 100);
-                this.gameStats.remove(p);
+                this.gameStats.remove(p.getName());
                 newStats.add(newWinRate);
                 newStats.add(newNumOfWins);
                 newStats.add(newNumGamesPlayed);
-                this.gameStats.put(p, newStats);
+                this.gameStats.put(p.getName(), newStats);
             } else {
                 float winRate = round((numOfWins / numGamesPlayed) * 100);
                 newStats.add(winRate);
                 newStats.add(numOfWins);
                 newStats.add(numGamesPlayed);
             }
-            this.gameStats.put(p, newStats);
+            this.gameStats.put(p.getName(), newStats);
         }
     }
 
@@ -108,7 +109,7 @@ public class Person implements Writable {
         JSONObject json = new JSONObject();
         json.put("name", name);
         json.put("roles", rolesToJson());
-//        json.put("game parties", gamePartiesToJson());
+        json.put("game stats", gameStatsToJson());
 
         return json;
     }
@@ -121,12 +122,19 @@ public class Person implements Writable {
         return rolesJson;
     }
 
-//    public JSONArray gamePartiesToJson() {
-//        JSONArray gamePartiesJson = new JSONArray();
-//        for (GameParty gp : gameParties) {
-//            gamePartiesJson.put(gp.toJson());
-//        }
-//        return gamePartiesJson;
-//    }
+    public JSONObject gameStatsToJson() {
+        JSONObject jsonMap = new JSONObject();
+        for (Map.Entry<String, ArrayList<Float>> entry : gameStats.entrySet()) {
+            String key = entry.getKey();
+            ArrayList<Float> value = entry.getValue();
+            JSONArray jsonArray = new JSONArray(value);
+            jsonMap.put(key, jsonArray);
+        }
+        return jsonMap;
+    }
 
+    // setter
+    public void setGameStats(HashMap<String, ArrayList<Float>> hashMap) {
+        this.gameStats = hashMap;
+    }
 }
