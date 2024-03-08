@@ -48,45 +48,45 @@ class PersonTest {
         testPerson.addRole(game3);
         assertEquals(3, testPerson.getNumOfRoles());
     }
-
-    @Test
-    public void testGetGamePartiesNoParty() {
-        assertEquals(0, testPerson.getGameParties().size());
-    }
-
-    @Test
-    public void testGetGameParties1Party() {
-        testPerson.addToGameParty(gameParty1);
-        assertEquals(1, testPerson.getGameParties().size());
-    }
-
-    @Test
-    public void testGetGamePartiesMultipleParty() {
-        testPerson.addToGameParty(gameParty1);
-        testPerson.addToGameParty(gameParty2);
-        testPerson.addToGameParty(gameParty3);
-        assertEquals(3, testPerson.getGameParties().size());
-    }
-
-    @Test
-    public void testAddToGamePartyAllDifferentParties() {
-        assertEquals(0, testPerson.getGameParties().size());
-        testPerson.addToGameParty(gameParty1);
-        assertEquals(1, testPerson.getGameParties().size());
-        testPerson.addToGameParty(gameParty2);
-        assertEquals(2, testPerson.getGameParties().size());
-        testPerson.addToGameParty(gameParty3);
-        assertEquals(3, testPerson.getGameParties().size());
-    }
-
-    @Test
-    public void testAddToGamePartySameParty() {
-        assertEquals(0, testPerson.getGameParties().size());
-        testPerson.addToGameParty(gameParty1);
-        assertEquals(1, testPerson.getGameParties().size());
-        testPerson.addToGameParty(gameParty1);
-        assertEquals(1, testPerson.getGameParties().size());
-    }
+//
+//    @Test
+//    public void testGetGamePartiesNoParty() {
+//        assertEquals(0, testPerson.getGameParties().size());
+//    }
+//
+//    @Test
+//    public void testGetGameParties1Party() {
+//        testPerson.addToGameParty(gameParty1);
+//        assertEquals(1, testPerson.getGameParties().size());
+//    }
+//
+//    @Test
+//    public void testGetGamePartiesMultipleParty() {
+//        testPerson.addToGameParty(gameParty1);
+//        testPerson.addToGameParty(gameParty2);
+//        testPerson.addToGameParty(gameParty3);
+//        assertEquals(3, testPerson.getGameParties().size());
+//    }
+//
+//    @Test
+//    public void testAddToGamePartyAllDifferentParties() {
+//        assertEquals(0, testPerson.getGameParties().size());
+//        testPerson.addToGameParty(gameParty1);
+//        assertEquals(1, testPerson.getGameParties().size());
+//        testPerson.addToGameParty(gameParty2);
+//        assertEquals(2, testPerson.getGameParties().size());
+//        testPerson.addToGameParty(gameParty3);
+//        assertEquals(3, testPerson.getGameParties().size());
+//    }
+//
+//    @Test
+//    public void testAddToGamePartySameParty() {
+//        assertEquals(0, testPerson.getGameParties().size());
+//        testPerson.addToGameParty(gameParty1);
+//        assertEquals(1, testPerson.getGameParties().size());
+//        testPerson.addToGameParty(gameParty1);
+//        assertEquals(1, testPerson.getGameParties().size());
+//    }
 
 
     @Test

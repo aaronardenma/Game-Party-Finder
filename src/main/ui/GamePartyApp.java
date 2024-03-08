@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 // Game Party Maker application
 public class GamePartyApp {
-    private static final String JSON_STORE = "./data/gamepartyfinder.json";
+    private static final String JSON_STORE = "./data/testReaderGamePartyFinder.json";
     private GamePartyFinder partyFinder;
     private Scanner scanner;
     private JsonWriter jsonWriter;
@@ -58,26 +58,26 @@ public class GamePartyApp {
     // EFFECTS: displays menu of options to user
     private void displayMenu() {
         System.out.println("\nSelect actions involving:");
-        System.out.println("\t1. People");
-        System.out.println("\t2. Games");
-        System.out.println("\t3. GameParties");
-        System.out.println("\t4. Save");
-        System.out.println("\t5. Load");
+        System.out.println("\tp <- People");
+        System.out.println("\tg <- Games");
+        System.out.println("\tgp <- GameParties");
+        System.out.println("\ts <- Save");
+        System.out.println("\tl <- Load");
         System.out.println("\tquit");
     }
 
     // MODIFIES: this
     // EFFECTS: processes user command
     private void processCommand(String command) {
-        if (command.equals("people")) {
+        if (command.equals("p")) {
             peopleActions();
-        } else if (command.equals("games")) {
+        } else if (command.equals("g")) {
             gameActions();
-        } else if (command.equals("game parties")) {
+        } else if (command.equals("gp")) {
             gamePartyActions();
-        } else if (command.equals("save")) {
+        } else if (command.equals("s")) {
             saveGamePartyFinder();
-        } else if (command.equals("load")) {
+        } else if (command.equals("l")) {
             loadGamePartyFinder();
         } else {
             System.out.println("Selection not valid...");
@@ -134,7 +134,8 @@ public class GamePartyApp {
     private void createPerson() {
         System.out.println("What is this new Person's name?");
         String newName = scanner.next();
-        partyFinder.addPerson(newName);
+        Person person = new Person(newName);
+        partyFinder.addPerson(person);
     }
 
     // MODIFIES: this
@@ -212,7 +213,8 @@ public class GamePartyApp {
         String newName = scanner.next();
         System.out.println("What is the max party size for this game?");
         int maxPartySize = scanner.nextInt();
-        partyFinder.addGame(newName, maxPartySize);
+        Game game = new Game(newName, maxPartySize);
+        partyFinder.addGame(game);
     }
 
     // EFFECTS: displays a list of actions to the user involving the GameParty class
@@ -242,7 +244,8 @@ public class GamePartyApp {
         int maxPartySize = scanner.nextInt();
         System.out.println("Give this party a name");
         String partyName = scanner.next();
-        partyFinder.createGameParty(gameSelected, maxPartySize, partyName);
+        GameParty gameParty = new GameParty(gameSelected, maxPartySize, partyName);
+        partyFinder.addGameParty(gameParty);
     }
 
     // MODIFIES: this

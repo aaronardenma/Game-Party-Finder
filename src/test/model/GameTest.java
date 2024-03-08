@@ -24,35 +24,45 @@ public class GameTest {
     }
 
     @Test
+    public void testGetMaxPartyMembers() {
+        assertEquals(5, testGame.getMaxPartyMembers());
+    }
+
+    @Test
     public void testGetName() {
         assertEquals("League of Legends", testGame.getName());
     }
 
-    @Test
-    public void testGetListOfPlayers() {
-        assertEquals(0, testGame.getListOfPlayers().size());
-        testGame.addPerson(person1);
-        assertEquals(1, testGame.getListOfPlayers().size());
-        testGame.addPerson(person2);
-        assertEquals(2, testGame.getListOfPlayers().size());
-    }
+//    @Test
+//    public void testGetListOfPlayers() {
+//        assertEquals(0, testGame.getListOfPlayers().size());
+//        testGame.addPersonToGame(person1);
+//        assertEquals(1, testGame.getListOfPlayers().size());
+//        testGame.addPersonToGame(person2);
+//        assertEquals(2, testGame.getListOfPlayers().size());
+//    }
+//
+//    @Test
+//    public void testAddPersonSamePerson() {
+//        assertEquals(0, testGame.getListOfPlayers().size());
+//        testGame.addPersonToGame(person1);
+//        assertEquals(1, testGame.getListOfPlayers().size());
+//        testGame.addPersonToGame(person1);
+//        assertEquals(1, testGame.getListOfPlayers().size());
+//    }
+//
+//    @Test
+//    public void testAddPersonNoPersonInList() {
+//        assertEquals(0, testGame.getListOfPlayers().size());
+//        testGame.addPersonToGame(person1);
+//        assertEquals(1, testGame.getListOfPlayers().size());
+//        testGame.removePersonFromGame(person2);
+//        assertEquals(1, testGame.getListOfPlayers().size());
+//    }
 
     @Test
-    public void testAddPersonSamePerson() {
-        assertEquals(0, testGame.getListOfPlayers().size());
-        testGame.addPerson(person1);
-        assertEquals(1, testGame.getListOfPlayers().size());
-        testGame.addPerson(person1);
-        assertEquals(1, testGame.getListOfPlayers().size());
-    }
+    public void testToJson() {
 
-    @Test
-    public void testAddPersonNoPersonInList() {
-        assertEquals(0, testGame.getListOfPlayers().size());
-        testGame.addPerson(person1);
-        assertEquals(1, testGame.getListOfPlayers().size());
-        testGame.removePerson(person2);
-        assertEquals(1, testGame.getListOfPlayers().size());
     }
 
 

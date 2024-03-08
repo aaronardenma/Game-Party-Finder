@@ -10,10 +10,8 @@ import java.util.ArrayList;
 // game, and list of current members
 public class GameParty implements Writable {
     private int maxPartySize;
-    private int currentNumOfMembers;
     private final Game game;
     private ArrayList<Person> currentMembers;
-    private String status;
     private String gamePartyName;
 
     // REQUIRES: maxPartySize has an integer greater than 0
@@ -23,10 +21,8 @@ public class GameParty implements Writable {
 
     public GameParty(Game game, int maxPartySize, String name) {
         this.maxPartySize = maxPartySize;
-        this.currentNumOfMembers = 0;
         this.game = game;
         this.currentMembers = new ArrayList<>();
-        this.status = "Pending";
         this.gamePartyName = name;
 
     }
@@ -38,7 +34,6 @@ public class GameParty implements Writable {
     public void addMember(Person p) {
         if (p.getRoles().contains(game) && !currentMembers.contains(p)) {
             this.currentMembers.add(p);
-            this.currentNumOfMembers++;
         }
     }
 
@@ -50,7 +45,6 @@ public class GameParty implements Writable {
     public void deleteMember(Person p) {
         if (currentMembers.contains(p)) {
             this.currentMembers.remove(p);
-            this.currentNumOfMembers--;
         }
     }
 
@@ -60,7 +54,7 @@ public class GameParty implements Writable {
     // maximum party members for the Game Party's game
 
     public void changeTotalSize(int newSize) {
-        if (newSize >= this.currentNumOfMembers && newSize <= game.getMaxPartyMembers()) {
+        if (newSize >= getCurrentNumOfMembers() && newSize <= game.getMaxPartyMembers()) {
             this.maxPartySize = newSize;
         }
     }
@@ -77,7 +71,7 @@ public class GameParty implements Writable {
 
     // getter
     public int getCurrentNumOfMembers() {
-        return this.currentNumOfMembers;
+        return currentMembers.size();
     }
 
     // getter
@@ -85,22 +79,28 @@ public class GameParty implements Writable {
         return this.gamePartyName;
     }
 
+    public void setCurrentMembers(ArrayList<Person> members) {
+        this.currentMembers = members;
+    }
+
+
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         json.put("name", gamePartyName);
         json.put("maxPartySize", maxPartySize);
-        json.put("game", game);
-        json.put("status", status);
-        json.put("currentNumOfMembers", currentNumOfMembers);
+        json.put("game", game.toJson());
+        json.put("currentMembers", currentMembersToJson());
 
+        return json;
+    }
+
+    public JSONArray currentMembersToJson() {
         JSONArray currentMembersJson = new JSONArray();
         for (Person p : currentMembers) {
             currentMembersJson.put(p.toJson());
         }
-
-        json.put("currentMembers", currentMembersJson);
-
-        return json;
+        return currentMembersJson;
     }
+
 }

@@ -18,33 +18,42 @@ public class GamePartyFinder implements Writable {
         this.gameParties = new ArrayList<>();
     }
 
-    public void addPerson(String name) {
-        Person newPerson = new Person(name);
-        if (!getPeopleNames().contains(name)) {
-            people.add(newPerson);
+    public void addPerson(Person person) {
+//        Person newPerson = new Person(name);
+        if (!getPeople().contains(person)) {
+            people.add(person);
         }
     }
 
-    public void addGame(String name, int maxPartyMembers) {
+    public void addGame(Game game) {
         ArrayList<String> gameNames = new ArrayList<>();
         games.forEach((g) -> gameNames.add(g.getName().toLowerCase()));
 
-        if (!gameNames.contains(name.toLowerCase())) {
-            Game newGame = new Game(name, maxPartyMembers);
-            games.add(newGame);
+        if (!gameNames.contains(game.getName().toLowerCase())) {
+//            Game newGame = new Game(name, maxPartyMembers);
+            games.add(game);
         }
 
     }
 
-    public void createGameParty(Game game, int maxPartySize, String partyName) {
-        GameParty newGameParty = new GameParty(game, maxPartySize, partyName);
-        gameParties.add(newGameParty);
+//    public void createGameParty(Game game, int maxPartySize, String partyName) {
+//        GameParty newGameParty = new GameParty(game, maxPartySize, partyName);
+//        gameParties.add(newGameParty);
+//    }
+
+    public void addGameParty(GameParty gameParty) {
+        ArrayList<String> partyNames = new ArrayList<>();
+        gameParties.forEach((gp) -> partyNames.add(gp.getName().toLowerCase()));
+//        GameParty newGameParty = new GameParty(game, maxPartySize, partyName);
+        if (!partyNames.contains(gameParty.getName().toLowerCase())) {
+            gameParties.add(gameParty);
+        }
     }
 
     // MODIFIES: this
     // EFFECTS: adds person to gameParty
     public void addPersonToGameParty(Person person, GameParty gameParty) {
-        person.addToGameParty(gameParty);
+        gameParty.addMember(person);
     }
 
     // EFFECTS: add game to list of roles a person has

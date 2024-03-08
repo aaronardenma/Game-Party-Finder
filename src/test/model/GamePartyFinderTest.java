@@ -9,61 +9,64 @@ public class GamePartyFinderTest {
     private GamePartyFinder testGamePartyFinder;
     private Game game1;
     private Game game2;
+    private Game game3;
     private Person person1;
     private Person person2;
     private Person person3;
     private GameParty party1;
+    private GameParty party2;
 
     @BeforeEach
     public void runBefore() {
         testGamePartyFinder = new GamePartyFinder();
         game1 = new Game("League of Legends", 5);
         game2 = new Game("Valorant", 5);
+        game3 = new Game("league of legends", 5);
         person1 = new Person("Aaron");
         person2 = new Person("Nic");
         person3 = new Person("Renee");
         party1 = new GameParty(game1, 5, "party 1");
+        party2 = new GameParty(game2, 5, "party 2");
     }
 
     @Test
     public void testAddPerson() {
-        testGamePartyFinder.addPerson("Aaron");
+        testGamePartyFinder.addPerson(person1);
         assertEquals(1, testGamePartyFinder.getPeople().size());
         assertTrue(testGamePartyFinder.getPeopleNames().contains("Aaron"));
-        testGamePartyFinder.addPerson("Nic");
+        testGamePartyFinder.addPerson(person2);
         assertEquals(2, testGamePartyFinder.getPeople().size());
         assertTrue(testGamePartyFinder.getPeopleNames().contains("Nic"));
-        testGamePartyFinder.addPerson("Aaron");
+        testGamePartyFinder.addPerson(person1);
         assertEquals(2, testGamePartyFinder.getPeople().size());
     }
 
     @Test
     public void testAddGame() {
-        testGamePartyFinder.addGame("League", 5);
+        testGamePartyFinder.addGame(game1);
         assertEquals(1, testGamePartyFinder.getGames().size());
-        assertTrue(testGamePartyFinder.getGameNames().contains("League"));
-        testGamePartyFinder.addGame("league", 5);
+        assertTrue(testGamePartyFinder.getGames().contains(game1));
+        testGamePartyFinder.addGame(game3);
         assertEquals(1, testGamePartyFinder.getGames().size());
-        assertTrue(testGamePartyFinder.getGameNames().contains("League"));
-        assertFalse(testGamePartyFinder.getGameNames().contains("league"));
-        testGamePartyFinder.addGame("Valorant", 3);
+        assertTrue(testGamePartyFinder.getGames().contains(game1));
+        assertFalse(testGamePartyFinder.getGameNames().contains(game3));
+        testGamePartyFinder.addGame(game2);
         assertEquals(2, testGamePartyFinder.getGames().size());
-        assertTrue(testGamePartyFinder.getGameNames().contains("Valorant"));
-        testGamePartyFinder.addGame("VALORANT", 3);
-        assertEquals(2, testGamePartyFinder.getGames().size());
-        assertFalse(testGamePartyFinder.getGameNames().contains("VALORANT"));
-        testGamePartyFinder.addGame("CS2", 5);
-        assertEquals(3, testGamePartyFinder.getGames().size());
-        assertTrue(testGamePartyFinder.getGameNames().contains("CS2"));
+        assertTrue(testGamePartyFinder.getGames().contains(game2));
 
     }
 
     @Test
     public void testCreateGameParty() {
-        testGamePartyFinder.createGameParty(game1, 5, "league 1");
+        testGamePartyFinder.addGameParty(party1);
         assertEquals(1, testGamePartyFinder.getGameParties().size());
-        testGamePartyFinder.createGameParty(game1, 3, "league 2");
+        assertTrue(testGamePartyFinder.getGameParties().contains(party1));
+        testGamePartyFinder.addGameParty(party1);
+        assertEquals(1, testGamePartyFinder.getGameParties().size());
+        testGamePartyFinder.addGameParty(party2);
         assertEquals(2, testGamePartyFinder.getGameParties().size());
+        assertTrue(testGamePartyFinder.getGameParties().contains(party2));
+
 
     }
 
@@ -122,38 +125,35 @@ public class GamePartyFinderTest {
 
     @Test
     public void testGetGamePartyNames() {
-        testGamePartyFinder.createGameParty(game2, 5, "party 2");
+        testGamePartyFinder.addGameParty(party1);
         assertEquals(1, testGamePartyFinder.getGamePartyNames().size());
-        assertTrue(testGamePartyFinder.getGamePartyNames().contains("party 2"));
-        testGamePartyFinder.createGameParty(game2, 5, "party 3");
+        assertTrue(testGamePartyFinder.getGamePartyNames().contains("party 1"));
+        testGamePartyFinder.addGameParty(party2);
         assertEquals(2, testGamePartyFinder.getGamePartyNames().size());
         assertTrue(testGamePartyFinder.getGamePartyNames().contains("party 3"));
     }
 
     @Test
     public void testGetGameNames() {
-        testGamePartyFinder.addGame("Diablo 3", 4);
-        assertTrue(testGamePartyFinder.getGameNames().contains("Diablo 3"));
+        testGamePartyFinder.addGame(game1);
+        assertTrue(testGamePartyFinder.getGameNames().contains("League of Legends"));
         assertEquals(1, testGamePartyFinder.getGameNames().size());
-        testGamePartyFinder.addGame("Fortnite", 4);
-        assertTrue(testGamePartyFinder.getGameNames().contains("Fortnite"));
+        testGamePartyFinder.addGame(game2);
+        assertTrue(testGamePartyFinder.getGameNames().contains("Valorant"));
         assertEquals(2, testGamePartyFinder.getGameNames().size());
-        testGamePartyFinder.addGame("CS2", 5);
-        assertEquals(3, testGamePartyFinder.getGameNames().size());
-        assertTrue(testGamePartyFinder.getGameNames().contains("CS2"));
     }
 
     @Test
     public void testGetPeopleNames() {
-        testGamePartyFinder.addPerson("Paolo");
+        testGamePartyFinder.addPerson(person1);
         assertEquals(1, testGamePartyFinder.getPeopleNames().size());
-        assertTrue(testGamePartyFinder.getPeopleNames().contains("Paolo"));
-        testGamePartyFinder.addPerson("Ryan");
+        assertTrue(testGamePartyFinder.getPeopleNames().contains("Aaron"));
+        testGamePartyFinder.addPerson(person2);
         assertEquals(2, testGamePartyFinder.getPeopleNames().size());
-        assertTrue(testGamePartyFinder.getPeopleNames().contains("Ryan"));
-        testGamePartyFinder.addPerson("Caeleb");
+        assertTrue(testGamePartyFinder.getPeopleNames().contains("Nic"));
+        testGamePartyFinder.addPerson(person3);
         assertEquals(3, testGamePartyFinder.getPeopleNames().size());
-        assertTrue(testGamePartyFinder.getPeopleNames().contains("Caeleb"));
+        assertTrue(testGamePartyFinder.getPeopleNames().contains("Renee"));
     }
 
 }

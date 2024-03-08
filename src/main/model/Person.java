@@ -9,9 +9,8 @@ import java.util.ArrayList;
 // Represents a Person having a name, number of roles, list of roles, and list of Game Parties
 public class Person implements Writable {
     private final String name;
-    private int numOfRoles;
     private ArrayList<Game> roles;
-    private ArrayList<GameParty> gameParties;
+//    private ArrayList<GameParty> gameParties;
 
     // REQUIRES: name has a non-zero length
     // EFFECTS: name on Person is set to name; numOfRoles is set to 0;
@@ -19,9 +18,8 @@ public class Person implements Writable {
 
     public Person(String name) {
         this.name = name;
-        this.numOfRoles = 0;
         this.roles = new ArrayList<>();
-        this.gameParties = new ArrayList<>();
+//        this.gameParties = new ArrayList<>();
     }
 
     // getter
@@ -33,25 +31,25 @@ public class Person implements Writable {
     // getter
 
     public int getNumOfRoles() {
-        return this.numOfRoles;
+        return roles.size();
     }
 
     // getter
 
-    public ArrayList<GameParty> getGameParties() {
-        return this.gameParties;
-    }
+//    public ArrayList<GameParty> getGameParties() {
+//        return this.gameParties;
+//    }
 
     // MODIFIES: this, and GameParty
     // EFFECTS: Adds this GameParty to list of gameParties and adds Person to GameParty currentMembers
     // gameParties does not contain the GameParty
 
-    public void addToGameParty(GameParty gp) {
-        if (!gameParties.contains(gp)) {
-            gp.addMember(this);
-            gameParties.add(gp);
-        }
-    }
+//    public void addToGameParty(GameParty gp) {
+//        if (!gameParties.contains(gp)) {
+//            gp.addMember(this);
+//            gameParties.add(gp);
+//        }
+//    }
 
     // MODIFIES: this
     // EFFECTS: Add Game to list of roles and increment numOfRoles by 1 if list of roles
@@ -60,8 +58,7 @@ public class Person implements Writable {
     public void addRole(Game g) {
         if (!roles.contains(g)) {
             this.roles.add(g);
-            this.numOfRoles++;
-            g.addPerson(this);
+//            g.addPersonToGame(this);
         }
     }
 
@@ -72,8 +69,7 @@ public class Person implements Writable {
     public void deleteRole(Game g) {
         if (roles.contains(g)) {
             this.roles.remove(g);
-            this.numOfRoles--;
-            g.removePerson(this);
+//            g.removePersonFromGame(this);
         }
 
     }
@@ -84,21 +80,42 @@ public class Person implements Writable {
         return this.roles;
     }
 
+    // setter
+
+    public void setRoles(ArrayList<Game> newRoles) {
+        this.roles = newRoles;
+    }
+
+    // setter
+
+//    public void setGameParties(ArrayList<GameParty> newParties) {
+//        this.gameParties = newParties;
+//    }
+
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         json.put("name", name);
-        json.put("numOfRoles", numOfRoles);
+        json.put("roles", rolesToJson());
+//        json.put("game parties", gamePartiesToJson());
 
+        return json;
+    }
 
+    public JSONArray rolesToJson() {
         JSONArray rolesJson = new JSONArray();
         for (Game g : roles) {
             rolesJson.put(g.toJson());
         }
-
-        json.put("roles", rolesJson);
-
-        return json;
+        return rolesJson;
     }
+
+//    public JSONArray gamePartiesToJson() {
+//        JSONArray gamePartiesJson = new JSONArray();
+//        for (GameParty gp : gameParties) {
+//            gamePartiesJson.put(gp.toJson());
+//        }
+//        return gamePartiesJson;
+//    }
 
 }
