@@ -49,7 +49,7 @@ public class GamePartyFinderTest {
         testGamePartyFinder.addGame(game3);
         assertEquals(1, testGamePartyFinder.getGames().size());
         assertTrue(testGamePartyFinder.getGames().contains(game1));
-        assertFalse(testGamePartyFinder.getGameNames().contains(game3));
+        assertFalse(testGamePartyFinder.getGameNames().contains(game3.getName()));
         testGamePartyFinder.addGame(game2);
         assertEquals(2, testGamePartyFinder.getGames().size());
         assertTrue(testGamePartyFinder.getGames().contains(game2));
