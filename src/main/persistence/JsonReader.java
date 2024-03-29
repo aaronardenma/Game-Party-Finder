@@ -143,7 +143,7 @@ public class JsonReader {
         gpf.addGameParty(gameParty);
     }
 
-
+    // EFFECTS: Convert JSONArray with people representation to ArrayList
     private ArrayList<Person> toArrayPersonList(JSONArray array) {
         ArrayList<Person> listPerson = new ArrayList<>();
         for (int i = 0; i < array.length(); i++) {
@@ -155,6 +155,7 @@ public class JsonReader {
         return listPerson;
     }
 
+    // EFFECTS: Convert JSONArray with game representation to ArrayList
     private ArrayList<Game> toArrayGameList(JSONArray array) {
         ArrayList<Game> listGames = new ArrayList<>();
         for (int i = 0; i < array.length(); i++) {

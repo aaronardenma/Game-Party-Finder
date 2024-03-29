@@ -69,7 +69,7 @@ class PersonTest {
     public void testDeleteRoleNoRole() {
         testPerson.addRole(game1);
         assertEquals(1, testPerson.getNumOfRoles());
-        testPerson.deleteRole(game2);
+        testPerson.removeRole(game2);
         assertEquals(1, testPerson.getNumOfRoles());
     }
 
@@ -78,7 +78,7 @@ class PersonTest {
         assertEquals(0, testPerson.getNumOfRoles());
         testPerson.addRole(game1);
         assertEquals(1, testPerson.getNumOfRoles());
-        testPerson.deleteRole(game1);
+        testPerson.removeRole(game1);
         assertEquals(0, testPerson.getNumOfRoles());
     }
 

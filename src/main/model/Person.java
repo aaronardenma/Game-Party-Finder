@@ -52,7 +52,7 @@ public class Person implements Writable {
     // MODIFIES: this
     // EFFECTS: Removes Game from list of roles if list of roles contains the Game
 
-    public void deleteRole(Game g) {
+    public void removeRole(Game g) {
         if (roles.contains(g)) {
             this.roles.remove(g);
         }
@@ -63,6 +63,13 @@ public class Person implements Writable {
 
     public ArrayList<Game> getRoles() {
         return this.roles;
+    }
+
+    //
+    public ArrayList<String> getRoleNames() {
+        ArrayList<String> roleNames = new ArrayList<>();
+        roles.forEach((g) -> roleNames.add(g.getName()));
+        return roleNames;
     }
 
     // setter

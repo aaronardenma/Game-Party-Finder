@@ -82,11 +82,11 @@ public class GamePartyTest {
         testGameParty.addMember(person2);
         testGameParty.addMember(person3);
 
-        testGameParty.deleteMember(person1);
+        testGameParty.removeMember(person1);
         assertEquals(2, testGameParty.getCurrentNumOfMembers());
-        testGameParty.deleteMember(person2);
+        testGameParty.removeMember(person2);
         assertEquals(1, testGameParty.getCurrentNumOfMembers());
-        testGameParty.deleteMember(person3);
+        testGameParty.removeMember(person3);
         assertEquals(0, testGameParty.getCurrentNumOfMembers());
     }
 
@@ -99,9 +99,9 @@ public class GamePartyTest {
         testGameParty.addMember(person2);
         testGameParty.addMember(person3);
 
-        testGameParty.deleteMember(person1);
+        testGameParty.removeMember(person1);
         assertEquals(2, testGameParty.getCurrentNumOfMembers());
-        testGameParty.deleteMember(person1);
+        testGameParty.removeMember(person1);
         assertEquals(2, testGameParty.getCurrentNumOfMembers());
     }
 
@@ -174,8 +174,13 @@ public class GamePartyTest {
         assertEquals(1, testGameParty.getCurrentNumOfMembers());
         testGameParty.addMember(person1);
         assertEquals(1, testGameParty.getCurrentNumOfMembers());
-        testGameParty.deleteMember(person1);
+        testGameParty.removeMember(person1);
         assertEquals(0, testGameParty.getCurrentNumOfMembers());
+    }
+
+    @Test
+    public void testGetGame() {
+        assertEquals(game1, testGameParty.getGame());
     }
 
     @Test

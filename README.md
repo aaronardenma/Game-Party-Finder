@@ -16,3 +16,10 @@ A *bulleted* list:
 - As a user, I want to be able to be able to reduce the required size of the game party
 - As a user, I want to be able to load previous states (gathered enough people or not) of game parties, win rates of players, existing players and games, if I choose to
 - As a user, I want to be able to save current game parties, win rates from completed parties, existing players and games, if I choose to
+
+## Instructions for Grader
+- You can generate new roles (games) in a person by clicking menu item "Add Role"
+- You can delete roles from a given person by clicking menu item "Delete Role"
+- You can locate my visual component by first loading my application and seeing a graphical video game icon
+- You can save the state of my application by clicking the save button
+- You can reload the state of my application by clicking the load button

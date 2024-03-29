@@ -157,6 +157,44 @@ public class GamePartyFinderTest {
     }
 
     @Test
+    public void testRemovePerson() {
+        testGamePartyFinder.addPerson(person1);
+        testGamePartyFinder.addGame(game1);
+        testGamePartyFinder.addGameParty(party1);
+        testGamePartyFinder.addRoleToPerson(person1, game1);
+        testGamePartyFinder.addPersonToGameParty(person1, party1);
+
+        assertEquals(1, testGamePartyFinder.getPeople().size());
+        assertTrue(testGamePartyFinder.getPeople().contains(person1));
+        assertTrue(party1.getCurrentMembers().contains(person1));
+
+        testGamePartyFinder.removePerson(person1);
+        assertEquals(0, testGamePartyFinder.getPeople().size());
+        assertFalse(testGamePartyFinder.getPeople().contains(person1));
+        assertFalse(party1.getCurrentMembers().contains(person1));
+    }
+
+    @Test
+    public void testRemoveGame() {
+        testGamePartyFinder.addPerson(person1);
+        testGamePartyFinder.addGame(game1);
+        testGamePartyFinder.addGameParty(party1);
+        testGamePartyFinder.addRoleToPerson(person1, game1);
+        testGamePartyFinder.addPersonToGameParty(person1, party1);
+        testGamePartyFinder.removeGame(game1);
+        assertFalse(testGamePartyFinder.getRolesFromPerson(person1).contains(game1));
+        assertFalse(testGamePartyFinder.getGames().contains(game1));
+        assertFalse(testGamePartyFinder.getGameParties().contains(party1));
+    }
+
+    @Test
+    public void testRemoveGameParty() {
+        testGamePartyFinder.addGameParty(party1);
+        testGamePartyFinder.removeGameParty(party1);
+        assertFalse(testGamePartyFinder.getGameParties().contains(party1));
+    }
+
+    @Test
     public void testEndSession() {
         testGamePartyFinder.addPerson(person1);
         testGamePartyFinder.addPerson(person2);

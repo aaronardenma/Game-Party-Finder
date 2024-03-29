@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Scanner;
 import java.util.ArrayList;
 
-// Game Party Maker application
+// Game Party Maker Console Application
 public class GamePartyApp {
     private static final String JSON_STORE = "./data/testWriterGamePartyFinder.json";
     private GamePartyFinder partyFinder;

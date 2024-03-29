@@ -42,7 +42,7 @@ public class GameParty implements Writable {
     // EFFECTS: Removes person from currentMembers list
     // and reduces currentSize by 1 if currentMembers contains the Person p
 
-    public void deleteMember(Person p) {
+    public void removeMember(Person p) {
         if (currentMembers.contains(p)) {
             this.currentMembers.remove(p);
         }
@@ -77,6 +77,11 @@ public class GameParty implements Writable {
     // getter
     public String getName() {
         return this.gamePartyName;
+    }
+
+    // getter
+    public Game getGame() {
+        return this.game;
     }
 
     // setter

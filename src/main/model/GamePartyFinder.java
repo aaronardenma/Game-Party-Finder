@@ -66,7 +66,7 @@ public class GamePartyFinder implements Writable {
     // MODIFIES: person
     // EFFECTS: remove game from list of roles person has
     public void deleteRoleFromPerson(Person person, Game game) {
-        person.deleteRole(game);
+        person.removeRole(game);
     }
 
     // EFFECTS: return list of roles from person
@@ -125,6 +125,32 @@ public class GamePartyFinder implements Writable {
             Person p = members.get(i);
             p.updateWinRate(gameParty, numOfWins, numGamesPlayed);
         }
+        gameParties.remove(gameParty);
+    }
+
+    // MODIFIES: this, GameParty
+    // EFFECTS: remove Person from people, check GameParty in gameParties and remove person from any GameParty that
+    // have Person as a member
+    public void removePerson(Person person) {
+        people.remove(person);
+        for (GameParty gp: gameParties) {
+            if (gp.getCurrentMembers().contains(person)) {
+                gp.removeMember(person);
+            }
+        }
+    }
+
+    // MODIFIES: this, Person
+    // EFFECTS: removes game from games, deletes GameParties that are set for game, and deletes game role from all persons
+    public void removeGame(Game game) {
+        games.remove(game);
+        gameParties.removeIf((gp) -> (gp.getGame() == game));
+        people.forEach((p) -> p.removeRole(game));
+    }
+
+    // MODIFIES: this
+    // EFFECTS: remove gameParty from gameParties
+    public void removeGameParty(GameParty gameParty) {
         gameParties.remove(gameParty);
     }
 
