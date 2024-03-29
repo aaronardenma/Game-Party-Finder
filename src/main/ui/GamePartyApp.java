@@ -174,7 +174,7 @@ public class GamePartyApp {
 
     // MODIFIES: this
     // EFFECTS: view all roles for Person determined by user Response
-    public void viewRoles() {
+    private void viewRoles() {
         System.out.println("Whose roles would you like to see?");
         Person person = getPersonFromUserResponse();
         ArrayList<Game> roles = person.getRoles();

@@ -54,7 +54,7 @@ public class GamePartyFinderSwingUI extends JPanel implements ActionListener {
 
     // MODIFIES: this
     // EFFECT: adds menu items to the Person Menu
-    public void addPersonMenuItems() {
+    private void addPersonMenuItems() {
         JMenuItem addPersonItem = new JMenuItem("Add Person");
         addPersonItem.addActionListener(this);
         addPersonItem.setActionCommand("Add Person");
@@ -74,7 +74,7 @@ public class GamePartyFinderSwingUI extends JPanel implements ActionListener {
 
     // MODIFIES: this
     // EFFECT: adds game items to the Game Menu
-    public void addGameMenuItems() {
+    private void addGameMenuItems() {
         JMenuItem addGameItem = new JMenuItem("Add Game", new ImageIcon("ui/video-game.png"));
         addGameItem.addActionListener(new ActionListener() {
             @Override
@@ -88,7 +88,7 @@ public class GamePartyFinderSwingUI extends JPanel implements ActionListener {
 
     // MODIFIES: this
     // EFFECT: adds game party items to the Game Party Menu
-    public void addGamePartyMenuItems() {
+    private void addGamePartyMenuItems() {
         JMenuItem addGamePartyItem = new JMenuItem("Create Game Party");
         addGamePartyItem.addActionListener(this);
         addGamePartyItem.setActionCommand("Create Game Party");
@@ -111,7 +111,7 @@ public class GamePartyFinderSwingUI extends JPanel implements ActionListener {
 
     // MODIFIES: this
     // EFFECTS: create a text field for user to input new Person's name with corresponding label to create a new person
-    public void addPersonFields() {
+    private void addPersonFields() {
         removeAll();
         JLabel nameLabel = new JLabel("Name: ");
         JTextField nameField = new JTextField(20);
@@ -151,14 +151,14 @@ public class GamePartyFinderSwingUI extends JPanel implements ActionListener {
 
     // MODIFIES: this
     // EFFECTS: calls openPersonAndGameSelectionDialog() to add selection dialogs to select person and game to add
-    public void addRoleFields() {
+    private void addRoleFields() {
         openPersonAndGameSelectionDialog("Person", false);
 
     }
 
     // MODIFIES: this
     // EFFECTS: calls openPersonAndGameSelectionDialog() to add selection dialogs to select person and game to add
-    public void openPersonAndGameSelectionDialog(String selectionType, Boolean last) {
+    private void openPersonAndGameSelectionDialog(String selectionType, Boolean last) {
         removeAll();
         JList itemList = new JList<>(matchType(selectionType).toArray(new String[0]));
         JScrollPane scrollPane = new JScrollPane(itemList);
@@ -226,7 +226,7 @@ public class GamePartyFinderSwingUI extends JPanel implements ActionListener {
     // MODIFIES: this
     // EFFECTS: open people selection dialog and view roles to allow user to select role to delete with a cancel and
     // submit button
-    public void deleteRoles() {
+    private void deleteRoles() {
         removeAll();
         JList itemList = new JList<>(gamePartyFinder.getPeopleNames().toArray(new String[0]));
         JScrollPane scrollPane = new JScrollPane(itemList);
@@ -258,7 +258,7 @@ public class GamePartyFinderSwingUI extends JPanel implements ActionListener {
     // MODIFIES: this, gamePartyFinder
     // EFFECTS: create a selection dialog to display all roles of a person that can be submitted to delete role
     // from person with a cancel and submit button
-    public void viewRoles(Person p) {
+    private void viewRoles(Person p) {
         removeAll();
         JList itemList = new JList<>(p.getRoleNames().toArray(new String[0]));
         JScrollPane scrollPane = new JScrollPane(itemList);
@@ -289,7 +289,7 @@ public class GamePartyFinderSwingUI extends JPanel implements ActionListener {
 
     // EFFECTS: if selectionType equals "Person", generate list of people names. if equals "Game", generate list of game
     // names. if equals "Game Party", generate list of game parties
-    public ArrayList<String> matchType(String selectionType) {
+    private ArrayList<String> matchType(String selectionType) {
         ArrayList<String> list = null;
         if (selectionType.equals("Person")) {
             list = gamePartyFinder.getPeopleNames();
@@ -303,7 +303,7 @@ public class GamePartyFinderSwingUI extends JPanel implements ActionListener {
 
     // MODIFIES: this, gamePartyFinder
     // EFFECTS: add fields related to Game construction and add to gamePartyFinder with a submit and cancel button
-    public void addGameFields() {
+    private void addGameFields() {
         removeAll();
         JLabel nameLabel = new JLabel("Game Name: ");
         JLabel maxPartySizeLabel = new JLabel("Max Party Size: ");
@@ -345,7 +345,7 @@ public class GamePartyFinderSwingUI extends JPanel implements ActionListener {
     }
 
     // EFFECTS: creates a cancel button that brings user back to the home screen
-    public JButton createCancelButton() {
+    private JButton createCancelButton() {
         JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(new ActionListener() {
             @Override
@@ -359,7 +359,7 @@ public class GamePartyFinderSwingUI extends JPanel implements ActionListener {
 
     // MODIFIES: this
     // EFFECTS: adds a button panel to this, with a submit button and cancel button
-    public void createButtonPanel(JButton submitButton) {
+    private void createButtonPanel(JButton submitButton) {
         JPanel buttonPane = new JPanel();
         buttonPane.add(createCancelButton());
         buttonPane.add(submitButton);
@@ -368,7 +368,7 @@ public class GamePartyFinderSwingUI extends JPanel implements ActionListener {
 
     // MODIFIES: this
     // EFFECTS: add label and field panels to this
-    public void createLabelFieldPanel(JPanel labelPanel, JPanel fieldPanel) {
+    private void createLabelFieldPanel(JPanel labelPanel, JPanel fieldPanel) {
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         add(labelPanel, BorderLayout.WEST);
         add(fieldPanel, BorderLayout.EAST);
@@ -376,7 +376,7 @@ public class GamePartyFinderSwingUI extends JPanel implements ActionListener {
 
     // MODIFIES: this
     // EFFECTS: displays people and roles, adds a save load button
-    public void returnOriginalState() {
+    private void returnOriginalState() {
         removeAll();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         displayGames();
@@ -408,7 +408,7 @@ public class GamePartyFinderSwingUI extends JPanel implements ActionListener {
 
     // MODIFIES: this
     // EFFECTS: add load and save buttons to a panel, and add panel to this
-    public void addSaveLoadButtons() {
+    private void addSaveLoadButtons() {
         JPanel saveLoadPanel = new JPanel();
         saveLoadPanel.add(createLoadButton());
         saveLoadPanel.add(createSaveButton());
@@ -417,7 +417,7 @@ public class GamePartyFinderSwingUI extends JPanel implements ActionListener {
 
     // MODIFIES: gamePartyFinder
     // EFFECTS: creates a JButton that loads JSON data to gamePartyFinder from JSON_STORE path
-    public JButton createLoadButton() {
+    private JButton createLoadButton() {
         JButton loadButton = new JButton("Load");
         loadButton.addActionListener(new ActionListener() {
             @Override

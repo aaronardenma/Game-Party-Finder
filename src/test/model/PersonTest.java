@@ -187,7 +187,7 @@ class PersonTest {
     }
 
     @Test
-    private void testGetRoleNames() {
+    public void testGetRoleNames() {
         testPerson.addRole(game1);
         testPerson.addRole(game2);
         assertEquals("League of Legends", testPerson.getRoleNames().get(0));
