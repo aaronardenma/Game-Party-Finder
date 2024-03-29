@@ -19,7 +19,6 @@ public class Person implements Writable {
     // REQUIRES: name has a non-zero length
     // EFFECTS: name on Person is set to name; numOfRoles is set to 0;
     // roles and GameParties are empty ArrayLists
-
     public Person(String name) {
         this.name = name;
         this.roles = new ArrayList<>();
@@ -27,13 +26,11 @@ public class Person implements Writable {
     }
 
     // getter
-
     public String getName() {
         return this.name;
     }
 
     // getter
-
     public int getNumOfRoles() {
         return roles.size();
     }
@@ -42,7 +39,6 @@ public class Person implements Writable {
     // MODIFIES: this
     // EFFECTS: Add Game to list of roles and increment numOfRoles by 1 if list of roles
     // does not contain the Game
-
     public void addRole(Game g) {
         if (!roles.contains(g)) {
             this.roles.add(g);
@@ -51,7 +47,6 @@ public class Person implements Writable {
 
     // MODIFIES: this
     // EFFECTS: Removes Game from list of roles if list of roles contains the Game
-
     public void removeRole(Game g) {
         if (roles.contains(g)) {
             this.roles.remove(g);
@@ -60,12 +55,11 @@ public class Person implements Writable {
     }
 
     // getter
-
     public ArrayList<Game> getRoles() {
         return this.roles;
     }
 
-    //
+    // EFFECTS: return ArrayList<String> of person role names
     public ArrayList<String> getRoleNames() {
         ArrayList<String> roleNames = new ArrayList<>();
         roles.forEach((g) -> roleNames.add(g.getName()));
@@ -73,13 +67,11 @@ public class Person implements Writable {
     }
 
     // setter
-
     public void setRoles(ArrayList<Game> newRoles) {
         this.roles = newRoles;
     }
 
     // getter
-
     public HashMap<String, ArrayList<Float>> getGameStats() {
         return this.gameStats;
     }

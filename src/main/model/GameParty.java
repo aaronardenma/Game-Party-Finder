@@ -18,7 +18,6 @@ public class GameParty implements Writable {
     // EFFECTS: maxPartySize on GameParty is set to maxPartySize;
     // currentNumOfMembers is set to 0; game is set to game;
     // currentMembers is set to an empty array list
-
     public GameParty(Game game, int maxPartySize, String name) {
         this.maxPartySize = maxPartySize;
         this.game = game;
@@ -30,7 +29,6 @@ public class GameParty implements Writable {
     // MODIFIES: this
     // EFFECTS: Add person to currentMembers list && increase currentSize by 1
     // if their roles contain the game of the GameParty
-
     public void addMember(Person p) {
         if (p.getRoles().contains(game) && !currentMembers.contains(p)) {
             this.currentMembers.add(p);
@@ -41,7 +39,6 @@ public class GameParty implements Writable {
     // MODIFIES: this
     // EFFECTS: Removes person from currentMembers list
     // and reduces currentSize by 1 if currentMembers contains the Person p
-
     public void removeMember(Person p) {
         if (currentMembers.contains(p)) {
             this.currentMembers.remove(p);
@@ -52,7 +49,6 @@ public class GameParty implements Writable {
     // EFFECTS: changes this party size to newSize if newSize is bigger or equal than the
     // current Number of members in the Game Party and newSize is smaller or equal to the
     // maximum party members for the Game Party's game
-
     public void changeTotalSize(int newSize) {
         if (newSize >= getCurrentNumOfMembers() && newSize <= game.getMaxPartyMembers()) {
             this.maxPartySize = newSize;

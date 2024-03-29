@@ -38,7 +38,6 @@ public class GamePartyFinder implements Writable {
         if (!gameNames.contains(game.getName().toLowerCase())) {
             games.add(game);
         }
-
     }
 
     // MODIFIES: this

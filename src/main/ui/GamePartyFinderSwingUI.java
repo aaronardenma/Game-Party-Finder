@@ -26,6 +26,9 @@ public class GamePartyFinderSwingUI extends JPanel implements ActionListener {
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
 
+    // EFFECTS: Create GamePartyFinder and JMenuBar. Add Person, Game, and Game Parties menu item to Menu Bar. Create
+    // save and load buttons with JsonWriter and JsonReader constructors. set personNameSelected and gameNameSelected
+    // to null. Create ImageIcon of video-game.png to display as a splash screen.
     public GamePartyFinderSwingUI() {
         gamePartyFinder = new GamePartyFinder();
         menuBar = new JMenuBar();
