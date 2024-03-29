@@ -141,7 +141,8 @@ public class GamePartyFinder implements Writable {
     }
 
     // MODIFIES: this, Person
-    // EFFECTS: removes game from games, deletes GameParties that are set for game, and deletes game role from all persons
+    // EFFECTS: removes game from games, deletes GameParties that are set for game, and deletes game role from all
+    // persons
     public void removeGame(Game game) {
         games.remove(game);
         gameParties.removeIf((gp) -> (gp.getGame() == game));
