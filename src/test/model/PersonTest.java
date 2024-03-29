@@ -185,4 +185,12 @@ class PersonTest {
         assertEquals(3, testPerson.getGameStats().get(person3.getName()).get(2));
         assertEquals(2, testPerson.getGameStats().size());
     }
+
+    @Test
+    private void testGetRoleNames() {
+        testPerson.addRole(game1);
+        testPerson.addRole(game2);
+        assertEquals("League of Legends", testPerson.getRoleNames().get(0));
+        assertEquals("Valorant", testPerson.getRoleNames().get(1));
+    }
 }
