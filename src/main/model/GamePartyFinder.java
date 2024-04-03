@@ -26,6 +26,8 @@ public class GamePartyFinder implements Writable {
     public void addPerson(Person person) {
         if (!getPeople().contains(person)) {
             people.add(person);
+            EventLog.getInstance().logEvent(new Event("Person, " + person.getName()
+                    + " added to Game Party Finder."));
         }
     }
 
@@ -37,6 +39,8 @@ public class GamePartyFinder implements Writable {
 
         if (!gameNames.contains(game.getName().toLowerCase())) {
             games.add(game);
+            EventLog.getInstance().logEvent(new Event("Game, " + game.getName()
+                    + " added to Game Party Finder."));
         }
     }
 

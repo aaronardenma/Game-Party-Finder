@@ -1,6 +1,7 @@
 package ui;
 
 import model.*;
+import model.Event;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
@@ -18,7 +19,7 @@ public class GamePartyFinderSwingUI extends JPanel implements ActionListener {
     private static JMenuBar menuBar;
     private JMenu personMenu;
     private JMenu gameMenu;
-    private JMenu gamePartyMenu;
+//    private JMenu gamePartyMenu;
     private JButton submitButton;
     private String personNameSelected;
     private String gameNameSelected;
@@ -34,14 +35,14 @@ public class GamePartyFinderSwingUI extends JPanel implements ActionListener {
         menuBar = new JMenuBar();
         personMenu = new JMenu("People");
         gameMenu = new JMenu("Game");
-        gamePartyMenu = new JMenu("Game Parties");
+//        gamePartyMenu = new JMenu("Game Parties");
         jsonWriter = new JsonWriter(JSON_STORE);
         jsonReader = new JsonReader(JSON_STORE);
         personNameSelected = null;
         gameNameSelected = null;
         menuBar.add(personMenu);
         menuBar.add(gameMenu);
-        menuBar.add(gamePartyMenu);
+//        menuBar.add(gamePartyMenu);
         setLayout(new BorderLayout());
         ImageIcon icon = createImageIcon("video-game.png");
         ImageIcon scaledIcon = scaleImageIcon(icon, 200, 200);
@@ -50,7 +51,7 @@ public class GamePartyFinderSwingUI extends JPanel implements ActionListener {
 
         addPersonMenuItems();
         addGameMenuItems();
-        addGamePartyMenuItems();
+//        addGamePartyMenuItems();
         displayGames();
         addSaveLoadButtons();
     }
@@ -91,13 +92,13 @@ public class GamePartyFinderSwingUI extends JPanel implements ActionListener {
 
     // MODIFIES: this
     // EFFECT: adds game party items to the Game Party Menu
-    private void addGamePartyMenuItems() {
-        JMenuItem addGamePartyItem = new JMenuItem("Create Game Party");
-        addGamePartyItem.addActionListener(this);
-        addGamePartyItem.setActionCommand("Create Game Party");
-
-        gamePartyMenu.add(addGamePartyItem);
-    }
+//    private void addGamePartyMenuItems() {
+//        JMenuItem addGamePartyItem = new JMenuItem("Create Game Party");
+//        addGamePartyItem.addActionListener(this);
+//        addGamePartyItem.setActionCommand("Create Game Party");
+//
+//        gamePartyMenu.add(addGamePartyItem);
+//    }
 
     // MODIFIES: this, gamePartyFinder
     // EFFECTS: if action command equals "Add Person", call addPersonFields(). if equals "Add Role",
@@ -476,10 +477,23 @@ public class GamePartyFinderSwingUI extends JPanel implements ActionListener {
         return new ImageIcon(scaledImg);
     }
 
+    // EFFECT: print out all event descriptions in eventLog
+    private static void printEventLog() {
+        for (Event event : EventLog.getInstance()) {
+            System.out.println(event.getDescription());
+        }
+    }
+
     // EFFECT: Create the GUI and show it
     private static void createAndShowGUI() {
         JFrame frame = new JFrame("MainMenu");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                printEventLog();
+            }
+        });
 
         GamePartyFinderSwingUI newContentPane = new GamePartyFinderSwingUI();
         newContentPane.setOpaque(true); //content panes must be opaque
@@ -490,6 +504,7 @@ public class GamePartyFinderSwingUI extends JPanel implements ActionListener {
         frame.setSize(500, 500);
         frame.setVisible(true);
     }
+
 
     // EFFECT: run the UI menu
     public static void main(String[] args) {

@@ -53,7 +53,6 @@ public class GamePartyFinderTest {
         testGamePartyFinder.addGame(game2);
         assertEquals(2, testGamePartyFinder.getGames().size());
         assertTrue(testGamePartyFinder.getGames().contains(game2));
-
     }
 
     @Test

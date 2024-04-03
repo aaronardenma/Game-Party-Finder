@@ -42,6 +42,8 @@ public class Person implements Writable {
     public void addRole(Game g) {
         if (!roles.contains(g)) {
             this.roles.add(g);
+            EventLog.getInstance().logEvent(new Event(
+                    g.getName() + " has been added as a role to " + this.name));
         }
     }
 
@@ -50,12 +52,16 @@ public class Person implements Writable {
     public void removeRole(Game g) {
         if (roles.contains(g)) {
             this.roles.remove(g);
+            EventLog.getInstance().logEvent(new Event(
+                    g.getName() + " role has been deleted from " + this.name));
         }
 
     }
 
     // getter
     public ArrayList<Game> getRoles() {
+        EventLog.getInstance().logEvent(new Event(
+                "Viewed roles of " + this.name));
         return this.roles;
     }
 

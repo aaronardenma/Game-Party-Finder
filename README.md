@@ -23,3 +23,28 @@ A *bulleted* list:
 - You can locate my visual component by first loading my application and seeing a graphical video game icon
 - You can save the state of my application by clicking the save button
 - You can reload the state of my application by clicking the load button
+
+## Phase 4: Task 2
+Person, aaron added to Game Party Finder.
+Viewed roles of aaron
+Person, nic added to Game Party Finder.
+Viewed roles of aaron
+Viewed roles of nic
+Game, league added to Game Party Finder.
+Viewed roles of aaron
+Viewed roles of nic
+Game, valorant added to Game Party Finder.
+Viewed roles of aaron
+Viewed roles of nic
+league has been added as a role to aaron
+Viewed roles of aaron
+Viewed roles of nic
+valorant has been added as a role to aaron
+Viewed roles of aaron
+Viewed roles of nic
+valorant has been added as a role to nic
+Viewed roles of aaron
+Viewed roles of nic
+valorant role has been deleted from aaron
+Viewed roles of aaron
+Viewed roles of nic
