@@ -51,6 +51,5 @@ Viewed roles of nic
 
 ## Phase 4: Task 3
 I would refactor the JSON Array returning objects where I'm converting different ArrayLists into JSONArrays. (i.e. lists of Person/GameParty/Game)
-Since the methods are largely duplicated
-of looping through the ArrayList and putting them into a new JSONArray. I would do this since it removes duplicity within the code and reduces
+Since the methods are largely duplicated of looping through the ArrayList and putting them into a new JSONArray. I would do this since it removes duplicity within the code and reduces
 propensity for errors.
