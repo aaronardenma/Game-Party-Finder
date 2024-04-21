@@ -14,7 +14,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 
 // GamePartyFinder Swing UI App
-public class GamePartyFinderSwingUI extends JPanel implements ActionListener {
+public class SwingUi extends JPanel implements ActionListener {
     private GamePartyFinder gamePartyFinder;
     private static JMenuBar menuBar;
     private JMenu personMenu;
@@ -30,7 +30,7 @@ public class GamePartyFinderSwingUI extends JPanel implements ActionListener {
     // EFFECTS: Create GamePartyFinder and JMenuBar. Add Person, Game, and Game Parties menu item to Menu Bar. Create
     // save and load buttons with JsonWriter and JsonReader constructors. set personNameSelected and gameNameSelected
     // to null. Create ImageIcon of video-game.png to display as a splash screen.
-    public GamePartyFinderSwingUI() {
+    public SwingUi() {
         gamePartyFinder = new GamePartyFinder();
         menuBar = new JMenuBar();
         personMenu = new JMenu("People");
@@ -460,7 +460,7 @@ public class GamePartyFinderSwingUI extends JPanel implements ActionListener {
 
     // EFFECT: Returns an ImageIcon, or null if the path was invalid.
     private ImageIcon createImageIcon(String path) {
-        java.net.URL imgURL = GamePartyFinderSwingUI.class.getResource(path);
+        java.net.URL imgURL = SwingUi.class.getResource(path);
         if (imgURL != null) {
             return new ImageIcon(imgURL);
         } else {
@@ -495,7 +495,7 @@ public class GamePartyFinderSwingUI extends JPanel implements ActionListener {
             }
         });
 
-        GamePartyFinderSwingUI newContentPane = new GamePartyFinderSwingUI();
+        SwingUi newContentPane = new SwingUi();
         newContentPane.setOpaque(true); //content panes must be opaque
         frame.setJMenuBar(menuBar);
         frame.setContentPane(newContentPane);
