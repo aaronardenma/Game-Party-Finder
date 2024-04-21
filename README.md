@@ -1,5 +1,3 @@
-# CPSC 210 Project
-
 ## Game Party Finder and Tracker
 
 A *bulleted* list:
@@ -16,40 +14,3 @@ A *bulleted* list:
 - As a user, I want to be able to be able to reduce the required size of the game party
 - As a user, I want to be able to load previous states (gathered enough people or not) of game parties, win rates of players, existing players and games, if I choose to
 - As a user, I want to be able to save current game parties, win rates from completed parties, existing players and games, if I choose to
-
-## Instructions for Grader
-- You can generate new roles (games) in a person by clicking menu item "Add Role"
-- You can delete roles from a given person by clicking menu item "Delete Role"
-- You can locate my visual component by first loading my application and seeing a graphical video game icon
-- You can save the state of my application by clicking the save button
-- You can reload the state of my application by clicking the load button
-
-## Phase 4: Task 2
-Person, aaron added to Game Party Finder.
-Viewed roles of aaron
-Person, nic added to Game Party Finder.
-Viewed roles of aaron
-Viewed roles of nic
-Game, league added to Game Party Finder.
-Viewed roles of aaron
-Viewed roles of nic
-Game, valorant added to Game Party Finder.
-Viewed roles of aaron
-Viewed roles of nic
-league has been added as a role to aaron
-Viewed roles of aaron
-Viewed roles of nic
-valorant has been added as a role to aaron
-Viewed roles of aaron
-Viewed roles of nic
-valorant has been added as a role to nic
-Viewed roles of aaron
-Viewed roles of nic
-valorant role has been deleted from aaron
-Viewed roles of aaron
-Viewed roles of nic
-
-## Phase 4: Task 3
-I would refactor the JSON Array returning objects where I'm converting different ArrayLists into JSONArrays. (i.e. lists of Person/GameParty/Game)
-Since the methods are largely duplicated of looping through the ArrayList and putting them into a new JSONArray. I would do this since it removes duplicity within the code and reduces
-propensity for errors.

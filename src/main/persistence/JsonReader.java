@@ -18,7 +18,6 @@ import java.util.stream.Stream;
 
 // Represents a JSON reader class that can transfer information from JSON files to
 // GamePartyFinder classes
-// Code was referenced from the Json Serialization Demo provided by the CPSC 210 Team
 public class JsonReader {
     private String source;
 
