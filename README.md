@@ -1,6 +1,5 @@
 ## Game Party Finder and Tracker
 
-A *bulleted* list:
 - Members of a group have *roles* that indicate which games they play. 
   - If someone wants to play a *certain multiplayer game*, it sends a status request to the people who have roles in that game
   - This application will help users **find game parties** in a 'chat room' like environment and **track win-rates** with players
