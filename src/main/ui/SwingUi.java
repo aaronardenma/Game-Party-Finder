@@ -2,6 +2,7 @@ package ui;
 
 import exceptions.GameNotInFinderException;
 import exceptions.NotInFinderException;
+import exceptions.PartyNotInFinderException;
 import exceptions.PersonNotInFinderException;
 import model.*;
 import model.Event;
@@ -20,15 +21,16 @@ import java.util.ArrayList;
 public class SwingUi extends JPanel implements ActionListener {
     private GamePartyFinder gamePartyFinder;
     private static JMenuBar menuBar;
-    private JMenu personMenu;
-    private JMenu gameMenu;
-//    private JMenu gamePartyMenu;
+    private final JMenu personMenu;
+    private final JMenu gameMenu;
+    private final JMenu gamePartyMenu;
     private JButton submitButton;
     private String personNameSelected;
     private String gameNameSelected;
+    private String gamePartyNameSelected;
     private static final String JSON_STORE = "./data/testWriterGamePartyFinder.json";
-    private JsonWriter jsonWriter;
-    private JsonReader jsonReader;
+    private final JsonWriter jsonWriter;
+    private final JsonReader jsonReader;
 
     // EFFECTS: Create GamePartyFinder and JMenuBar. Add Person, Game, and Game Parties menu item to Menu Bar. Create
     // save and load buttons with JsonWriter and JsonReader constructors. set personNameSelected and gameNameSelected
@@ -38,23 +40,24 @@ public class SwingUi extends JPanel implements ActionListener {
         menuBar = new JMenuBar();
         personMenu = new JMenu("People");
         gameMenu = new JMenu("Game");
-//        gamePartyMenu = new JMenu("Game Parties");
+        gamePartyMenu = new JMenu("Game Parties");
         jsonWriter = new JsonWriter(JSON_STORE);
         jsonReader = new JsonReader(JSON_STORE);
         personNameSelected = null;
         gameNameSelected = null;
+        gamePartyNameSelected = null;
         menuBar.add(personMenu);
         menuBar.add(gameMenu);
-//        menuBar.add(gamePartyMenu);
+        menuBar.add(gamePartyMenu);
         setLayout(new BorderLayout());
-        ImageIcon icon = createImageIcon("video-game.png");
+        ImageIcon icon = createImageIcon();
         ImageIcon scaledIcon = scaleImageIcon(icon, 200, 200);
         JLabel imageLabel = new JLabel(scaledIcon);
         add(imageLabel, BorderLayout.CENTER);
 
         addPersonMenuItems();
         addGameMenuItems();
-//        addGamePartyMenuItems();
+        addGamePartyMenuItems();
         displayGames();
         addSaveLoadButtons();
     }
@@ -73,35 +76,34 @@ public class SwingUi extends JPanel implements ActionListener {
         JMenuItem deleteRoleItem = new JMenuItem("Delete Role");
         deleteRoleItem.addActionListener(this);
         deleteRoleItem.setActionCommand("Delete Role");
+
+        JMenuItem addToGamePartyItem = new JMenuItem("Add to Game Party");
+        addToGamePartyItem.addActionListener(this);
+        addToGamePartyItem.setActionCommand("Add to Game Party");
         personMenu.add(addPersonItem);
         personMenu.add(addRoleItem);
         personMenu.add(deleteRoleItem);
+        personMenu.add(addToGamePartyItem);
 
     }
 
     // MODIFIES: this
     // EFFECT: adds game items to the Game Menu
     private void addGameMenuItems() {
-        JMenuItem addGameItem = new JMenuItem("Add Game", new ImageIcon("ui/video-game.png"));
-        addGameItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addGameFields();
-            }
-        });
+        JMenuItem addGameItem = new JMenuItem("Add Game");
+        addGameItem.addActionListener(e -> addGameFields());
 
         gameMenu.add(addGameItem);
     }
 
     // MODIFIES: this
     // EFFECT: adds game party items to the Game Party Menu
-//    private void addGamePartyMenuItems() {
-//        JMenuItem addGamePartyItem = new JMenuItem("Create Game Party");
-//        addGamePartyItem.addActionListener(this);
-//        addGamePartyItem.setActionCommand("Create Game Party");
-//
-//        gamePartyMenu.add(addGamePartyItem);
-//    }
+    private void addGamePartyMenuItems() {
+        JMenuItem addGamePartyItem = new JMenuItem("Create Game Party");
+        addGamePartyItem.addActionListener(e -> createGameParty());
+
+        gamePartyMenu.add(addGamePartyItem);
+    }
 
     // MODIFIES: this, gamePartyFinder
     // EFFECTS: if action command equals "Add Person", call addPersonFields(). if equals "Add Role",
@@ -113,6 +115,8 @@ public class SwingUi extends JPanel implements ActionListener {
             addRoleFields();
         } else if ("Delete Role".equals(e.getActionCommand())) {
             deleteRoles();
+        } else if ("Add to Game Party".equals(e.getActionCommand())) {
+            addToGamePartySelectionDialogs("Person", false);
         }
     }
 
@@ -122,10 +126,8 @@ public class SwingUi extends JPanel implements ActionListener {
         removeAll();
         JLabel nameLabel = new JLabel("Name: ");
         JTextField nameField = new JTextField(20);
-        nameField.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                submitButton.doClick(); // Simulate button click when Enter is pressed
-            }
+        nameField.addActionListener(e -> {
+            submitButton.doClick(); // Simulate button click when Enter is pressed
         });
 
         JPanel labelPane = new JPanel(new GridLayout(0, 1));
@@ -145,13 +147,11 @@ public class SwingUi extends JPanel implements ActionListener {
     private JButton createAddPersonSubmitButton(JTextField nameField) {
         // Create a submit button
         submitButton = new JButton("Submit");
-        submitButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Get the text from the text field
-                String name = nameField.getText();
-                gamePartyFinder.addPerson(new Person(name));
-                returnOriginalState();
-            }
+        submitButton.addActionListener(e -> {
+            // Get the text from the text field
+            String name = nameField.getText();
+            gamePartyFinder.addPerson(new Person(name));
+            returnOriginalState();
         });
         return submitButton;
     }
@@ -159,28 +159,26 @@ public class SwingUi extends JPanel implements ActionListener {
     // MODIFIES: this
     // EFFECTS: calls openPersonAndGameSelectionDialog() to add selection dialogs to select person and game to add
     private void addRoleFields() {
-        openPersonAndGameSelectionDialog("Person", false);
+        choosePersonAndRoleThenAdd("Person", false);
 
     }
 
     // MODIFIES: this
     // EFFECTS: calls openPersonAndGameSelectionDialog() to add selection dialogs to select person and game to add
-    private void openPersonAndGameSelectionDialog(String selectionType, Boolean last) {
+    private void choosePersonAndRoleThenAdd(String selectionType, Boolean last) {
         removeAll();
-        JList itemList = new JList<>(matchType(selectionType).toArray(new String[0]));
+        JList<String> itemList = new JList<>(matchType(selectionType).toArray(new String[0]));
         JScrollPane scrollPane = new JScrollPane(itemList);
         JButton setButton = new JButton("Set");
 
-        setButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (selectionType.equals("Person")) {
-                    personNameSelected = (String) itemList.getSelectedValue();
-                } else if (selectionType.equals("Game")) {
-                    gameNameSelected = (String) itemList.getSelectedValue();
-                    matchPersonGameNameAddRole();
-                }
-                checkRecursiveAddRole(last);
+        setButton.addActionListener(e -> {
+            if (selectionType.equals("Person")) {
+                personNameSelected = itemList.getSelectedValue();
+            } else if (selectionType.equals("Game")) {
+                gameNameSelected = itemList.getSelectedValue();
+                addRole();
             }
+            checkRecursiveAddRole(last);
         });
 
         JPanel buttonPanel = new JPanel();
@@ -196,27 +194,13 @@ public class SwingUi extends JPanel implements ActionListener {
     }
 
     // MODIFIES: this, gamePartyFinder
-    // EFFECTS: matches personNameSelected and gameNameSelected to list of people and games to find match and add game
-    // to that person
-    private void matchPersonGameNameAddRole() {
-        ArrayList<Person> people = gamePartyFinder.getPeople();
-        ArrayList<Game> games = gamePartyFinder.getGames();
-        Person personSelected = null;
-        Game gameSelected = null;
+    // EFFECTS: use personNameSelected and gameNameSelected to find person and game. then add role game to person
+    private void addRole() {
+        Person person = (Person) matchNameToClass("Person");
+        Game game = (Game) matchNameToClass("Game");
 
-        for (Person p : people) {
-            if (p.getName().equals(personNameSelected)) {
-                personSelected = p;
-            }
-        }
-
-        for (Game g : games) {
-            if (g.getName().equals(gameNameSelected)) {
-                gameSelected = g;
-            }
-        }
         try {
-            gamePartyFinder.addRoleToPerson(personSelected, gameSelected);
+            gamePartyFinder.addRoleToPerson(person, game);
         } catch (PersonNotInFinderException pe) {
             System.err.println("Person not found");
         } catch (GameNotInFinderException ge) {
@@ -224,6 +208,30 @@ public class SwingUi extends JPanel implements ActionListener {
         } catch (NotInFinderException ne) {
             System.err.println("Not found exception thrown");
         }
+    }
+
+    private Object matchNameToClass(String className) {
+        Object object = null;
+        if (className.equals("Person")) {
+            for (Person p : gamePartyFinder.getPeople()) {
+                if (p.getName().equals(personNameSelected)) {
+                    object = p;
+                }
+            }
+        } else if (className.equals("Game")) {
+            for (Game g : gamePartyFinder.getGames()) {
+                if (g.getName().equals(gameNameSelected)) {
+                    object = g;
+                }
+            }
+        } else if (className.equals("Game Party")) {
+            for (GameParty gp : gamePartyFinder.getGameParties()) {
+                if (gp.getName().equals(gamePartyNameSelected)) {
+                    object = gp;
+                }
+            }
+        }
+        return object;
     }
 
     // MODIFIES: this
@@ -234,7 +242,7 @@ public class SwingUi extends JPanel implements ActionListener {
             setVisible(true);
             returnOriginalState();
         } else {
-            openPersonAndGameSelectionDialog("Game", true);
+            choosePersonAndRoleThenAdd("Game", true);
         }
     }
 
@@ -243,23 +251,21 @@ public class SwingUi extends JPanel implements ActionListener {
     // submit button
     private void deleteRoles() {
         removeAll();
-        JList itemList = new JList<>(gamePartyFinder.getPeopleNames().toArray(new String[0]));
+        JList<String> itemList = new JList<>(gamePartyFinder.getPeopleNames().toArray(new String[0]));
         JScrollPane scrollPane = new JScrollPane(itemList);
         JButton setButton = new JButton("Set");
 
-        setButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                personNameSelected = (String) itemList.getSelectedValue();
-                ArrayList<Person> people = gamePartyFinder.getPeople();
-                Person personSelected = null;
+        setButton.addActionListener(e -> {
+            personNameSelected = itemList.getSelectedValue();
+            ArrayList<Person> people = gamePartyFinder.getPeople();
+            Person personSelected = null;
 
-                for (Person p : people) {
-                    if (p.getName().equals(personNameSelected)) {
-                        personSelected = p;
-                    }
+            for (Person p : people) {
+                if (p.getName().equals(personNameSelected)) {
+                    personSelected = p;
                 }
-                viewRoles(personSelected);
             }
+            viewRoles(personSelected);
         });
 
         setLayout(new BorderLayout());
@@ -275,23 +281,20 @@ public class SwingUi extends JPanel implements ActionListener {
     // from person with a cancel and submit button
     private void viewRoles(Person p) {
         removeAll();
-        JList itemList = new JList<>(p.getRoleNames().toArray(new String[0]));
+        JList<String> itemList = new JList<>(p.getRoleNames().toArray(new String[0]));
         JScrollPane scrollPane = new JScrollPane(itemList);
         JButton setButton = new JButton("Set");
 
-        setButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                gameNameSelected = (String) itemList.getSelectedValue();
-                Game gameSelected = null;
-                for (Game g : gamePartyFinder.getGames()) {
-                    if (g.getName().equals(gameNameSelected)) {
-                        gameSelected = g;
-                    }
+        setButton.addActionListener(e -> {
+            gameNameSelected = itemList.getSelectedValue();
+            Game gameSelected = null;
+            for (Game g : gamePartyFinder.getGames()) {
+                if (g.getName().equals(gameNameSelected)) {
+                    gameSelected = g;
                 }
-                gamePartyFinder.deleteRoleFromPerson(p, gameSelected);
-                returnOriginalState();
             }
+            gamePartyFinder.deleteRoleFromPerson(p, gameSelected);
+            returnOriginalState();
         });
 
         setLayout(new BorderLayout());
@@ -306,12 +309,16 @@ public class SwingUi extends JPanel implements ActionListener {
     // names. if equals "Game Party", generate list of game parties
     private ArrayList<String> matchType(String selectionType) {
         ArrayList<String> list = null;
-        if (selectionType.equals("Person")) {
-            list = gamePartyFinder.getPeopleNames();
-        } else if (selectionType.equals("Game")) {
-            list = gamePartyFinder.getGameNames();
-        } else if (selectionType.equals("Game Party")) {
-            list = gamePartyFinder.getGamePartyNames();
+        switch (selectionType) {
+            case "Person":
+                list = gamePartyFinder.getPeopleNames();
+                break;
+            case "Game":
+                list = gamePartyFinder.getGameNames();
+                break;
+            case "Game Party":
+                list = gamePartyFinder.getGamePartyNames();
+                break;
         }
         return list;
     }
@@ -343,18 +350,128 @@ public class SwingUi extends JPanel implements ActionListener {
         repaint();
     }
 
+    private void createGameParty() {
+        removeAll();
+        JList<String> itemList = new JList<>(matchType("Game").toArray(new String[0]));
+        JScrollPane scrollPane = new JScrollPane(itemList);
+        JButton setButton = new JButton("Set");
+
+        setButton.addActionListener(e -> {
+            gameNameSelected = itemList.getSelectedValue();
+            Game game = (Game) matchNameToClass("Game");
+            addCreateGamePartyFields(game);
+        });
+
+        setLayout(new BorderLayout());
+        add(scrollPane, BorderLayout.CENTER);
+        createButtonPanel(setButton);
+
+        revalidate();
+        repaint();
+    }
+
+    private void addCreateGamePartyFields(Game game) {
+        removeAll();
+        JLabel nameLabel = new JLabel("Party Name: ");
+        JLabel maxPartySizeLabel = new JLabel("Max Party Size: ");
+        JTextField nameField = new JTextField(10);
+        nameField.addActionListener(this);
+        JFormattedTextField maxPartySizeField = new JFormattedTextField(NumberFormat.getNumberInstance());
+        maxPartySizeField.addActionListener(this);
+        maxPartySizeField.setColumns(10);
+
+        JPanel labelPane = new JPanel(new GridLayout(0, 1));
+        labelPane.add(nameLabel);
+        labelPane.add(maxPartySizeLabel);
+
+        JPanel fieldPane = new JPanel(new GridLayout(0, 1));
+        fieldPane.add(nameField);
+        fieldPane.add(maxPartySizeField);
+
+        createLabelFieldPanel(labelPane, fieldPane);
+        createButtonPanel(createAddGamePartySubmitButton(game, nameField, maxPartySizeField));
+
+        revalidate();
+        repaint();
+    }
+
+    private void addToGamePartySelectionDialogs(String selectionType, boolean last) {
+        removeAll();
+        JList<String> itemList = new JList<>(matchType(selectionType).toArray(new String[0]));
+        JScrollPane scrollPane = new JScrollPane(itemList);
+        JButton setButton = new JButton("Set");
+
+        setButton.addActionListener(e -> {
+            if (selectionType.equals("Person")) {
+                personNameSelected = itemList.getSelectedValue();
+            } else if (selectionType.equals("Game Party")) {
+                gamePartyNameSelected = itemList.getSelectedValue();
+                addToGameParty();
+            }
+            checkRecursiveAddToGameParty(last);
+        });
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(createCancelButton());
+        buttonPanel.add(setButton);
+
+        setLayout(new BorderLayout());
+        add(scrollPane, BorderLayout.CENTER);
+        add(buttonPanel, BorderLayout.SOUTH);
+
+        revalidate();
+        repaint();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: if last is true, go back to the original state of the ui, if not, continue with the game
+    // selection dialog
+    private void checkRecursiveAddToGameParty(Boolean last) {
+        if (last) {
+            setVisible(true);
+            returnOriginalState();
+        } else {
+            addToGamePartySelectionDialogs("Game Party", true);
+        }
+    }
+
+    private void addToGameParty() {
+        Person person = (Person) matchNameToClass("Person");
+        GameParty gameParty = (GameParty) matchNameToClass("Game Party");
+
+        try {
+            gamePartyFinder.addPersonToGameParty(person, gameParty);
+        } catch (PersonNotInFinderException personNotInFinderException) {
+            System.err.println("Person not found");
+        } catch (PartyNotInFinderException partyNotInFinderException) {
+            System.err.println("Game Party not found");
+        } catch (NotInFinderException e) {
+            System.err.println("Not found in finder");
+        }
+    }
+
+    private JButton createAddGamePartySubmitButton(Game game, JTextField partyName, JFormattedTextField maxPartySize) {
+        JButton button = new JButton("Submit");
+        button.addActionListener(e -> {
+            // Get the text from the text field
+            String name = partyName.getText();
+            int partySize = ((Long) maxPartySize.getValue()).intValue();
+            gamePartyFinder.addGameParty(new GameParty(game, partySize, name));
+            returnOriginalState();
+        });
+        return button;
+    }
+
     // MODIFIES: this, gamePartyFinder
     // EFFECTS: create a submit button that upon action, adds a game to the game party finder
     private JButton createAddGameSubmitButton(JTextField nameField, JFormattedTextField maxPartySizeField) {
         submitButton = new JButton("Submit");
-        submitButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Get the text from the text field
-                String name = nameField.getText();
-                int maxPartySize = ((Long) maxPartySizeField.getValue()).intValue();
-                gamePartyFinder.addGame(new Game(name, maxPartySize));
-                returnOriginalState();
-            }
+        submitButton.addActionListener(e -> {
+            // Get the text from the text field
+            String name = nameField.getText();
+            int maxPartySize = ((Long) maxPartySizeField.getValue()).intValue();
+            gamePartyFinder.addGame(new Game(name, maxPartySize));
+            returnOriginalState();
         });
         return submitButton;
     }
@@ -362,12 +479,7 @@ public class SwingUi extends JPanel implements ActionListener {
     // EFFECTS: creates a cancel button that brings user back to the home screen
     private JButton createCancelButton() {
         JButton cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                returnOriginalState();
-            }
-        });
+        cancelButton.addActionListener(e -> returnOriginalState());
 
         return cancelButton;
     }
@@ -434,16 +546,13 @@ public class SwingUi extends JPanel implements ActionListener {
     // EFFECTS: creates a JButton that loads JSON data to gamePartyFinder from JSON_STORE path
     private JButton createLoadButton() {
         JButton loadButton = new JButton("Load");
-        loadButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    gamePartyFinder = jsonReader.read();
-                    System.out.println("Loaded " +  " from " + JSON_STORE);
-                    returnOriginalState();
-                } catch (IOException exception) {
-                    System.out.println("Unable to read from file: " + JSON_STORE);
-                }
+        loadButton.addActionListener(e -> {
+            try {
+                gamePartyFinder = jsonReader.read();
+                System.out.println("Loaded " +  " from " + JSON_STORE);
+                returnOriginalState();
+            } catch (IOException exception) {
+                System.out.println("Unable to read from file: " + JSON_STORE);
             }
         });
         return loadButton;
@@ -453,24 +562,22 @@ public class SwingUi extends JPanel implements ActionListener {
     // EFFECTS: creates a JButton that saves JSON data from gamePartyFinder to JSON_STORE path
     private JButton createSaveButton() {
         JButton saveButton = new JButton("Save");
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    jsonWriter.open();
-                    jsonWriter.write(gamePartyFinder);
-                    jsonWriter.close();
-                    System.out.println("Saved "  + " to " + JSON_STORE);
-                } catch (FileNotFoundException exception) {
-                    System.out.println("Unable to write to file: " + JSON_STORE);
-                }
+        saveButton.addActionListener(e -> {
+            try {
+                jsonWriter.open();
+                jsonWriter.write(gamePartyFinder);
+                jsonWriter.close();
+                System.out.println("Saved "  + " to " + JSON_STORE);
+            } catch (FileNotFoundException exception) {
+                System.out.println("Unable to write to file: " + JSON_STORE);
             }
         });
         return saveButton;
     }
 
     // EFFECT: Returns an ImageIcon, or null if the path was invalid.
-    private ImageIcon createImageIcon(String path) {
+    private ImageIcon createImageIcon() {
+        String path = "video-game.png";
         java.net.URL imgURL = SwingUi.class.getResource(path);
         if (imgURL != null) {
             return new ImageIcon(imgURL);
@@ -521,10 +628,6 @@ public class SwingUi extends JPanel implements ActionListener {
     public static void main(String[] args) {
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGUI();
-            }
-        });
+        javax.swing.SwingUtilities.invokeLater(SwingUi::createAndShowGUI);
     }
 }

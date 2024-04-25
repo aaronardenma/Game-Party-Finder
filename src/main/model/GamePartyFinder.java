@@ -27,8 +27,8 @@ public class GamePartyFinder implements Writable {
     public void addPerson(Person person) {
         if (!getPeople().contains(person)) {
             people.add(person);
-            EventLog.getInstance().logEvent(new Event("Person, " + person.getName()
-                    + " added to Game Party Finder."));
+            EventLog.getInstance().logEvent(new Event("(Person: " + person.getName()
+                    + ") added to Game Party Finder."));
         }
     }
 
@@ -40,8 +40,8 @@ public class GamePartyFinder implements Writable {
 
         if (!gameNames.contains(game.getName().toLowerCase())) {
             games.add(game);
-            EventLog.getInstance().logEvent(new Event("Game, " + game.getName()
-                    + " added to Game Party Finder."));
+            EventLog.getInstance().logEvent(new Event("(Game: " + game.getName()
+                    + ") added to Game Party Finder."));
         }
     }
 
@@ -52,6 +52,8 @@ public class GamePartyFinder implements Writable {
         gameParties.forEach((gp) -> partyNames.add(gp.getName().toLowerCase()));
         if (!partyNames.contains(gameParty.getName().toLowerCase())) {
             gameParties.add(gameParty);
+            EventLog.getInstance().logEvent(new Event(
+                    "(Game Party: " + gameParty.getName() + ") added to Game Party Finder."));
         }
     }
 
@@ -67,8 +69,11 @@ public class GamePartyFinder implements Writable {
         } else {
             try {
                 gameParty.addMember(person);
+                EventLog.getInstance().logEvent(new Event(
+                        "(Person: " + person.getName() + ") has been added to (Game Party: "
+                                + gameParty.getName() + ")"));
             } catch (PersonDoesNotContainRoleException personDoesNotContainRoleException) {
-                System.err.println(person.getName() + " does not contain Game Party role ("
+                System.err.println(person.getName() + " does not contain Game Party role (Game: "
                         + gameParty.getGame().getName() + ")");
             }
         }

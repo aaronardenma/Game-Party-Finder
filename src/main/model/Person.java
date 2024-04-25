@@ -61,8 +61,8 @@ public class Person implements Writable {
 
     // getter
     public ArrayList<Game> getRoles() {
-        EventLog.getInstance().logEvent(new Event(
-                "Viewed roles of " + this.name));
+//        EventLog.getInstance().logEvent(new Event(
+//                "Viewed roles of " + this.name));
         return this.roles;
     }
 
