@@ -1,5 +1,6 @@
 package model;
 
+import exceptions.PersonDoesNotContainRoleException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -7,9 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PersonTest {
     private Person testPerson;
-    private GameParty gameParty1;
-    private GameParty gameParty2;
-    private GameParty gameParty3;
+    private GameParty gameParty;
     private Game game1;
     private Game game2;
     private Game game3;
@@ -20,9 +19,7 @@ class PersonTest {
         game1 = new Game("League of Legends", 5);
         game2 = new Game("Valorant", 5);
         game3 = new Game("CS2", 5);
-        gameParty1 = new GameParty(game1, 5, "party 1");
-        gameParty2 = new GameParty(game2, 3, "party 2");
-        gameParty3 = new GameParty(game3, 4, "party 3");
+        gameParty = new GameParty(game1, 5, "party 1");
     }
 
     @Test
@@ -89,13 +86,18 @@ class PersonTest {
         testPerson.addRole(game1);
         person2.addRole(game1);
         person3.addRole(game1);
-        gameParty1.addMember(testPerson);
-        gameParty1.addMember(person2);
-        gameParty1.addMember(person3);
+
+        try {
+            gameParty.addMember(testPerson);
+            gameParty.addMember(person2);
+            gameParty.addMember(person3);
+        } catch (PersonDoesNotContainRoleException e) {
+            fail();
+        }
 
         assertEquals(0, testPerson.getGameStats().size());
 
-        testPerson.updateWinRate(gameParty1, 3, 3);
+        testPerson.updateWinRate(gameParty, 3, 3);
         assertTrue(testPerson.getGameStats().containsKey(person2.getName()));
         assertEquals(100, testPerson.getGameStats().get(person2.getName()).get(0));
         assertEquals(3, testPerson.getGameStats().get(person2.getName()).get(1));
@@ -114,13 +116,18 @@ class PersonTest {
         testPerson.addRole(game1);
         person2.addRole(game1);
         person3.addRole(game1);
-        gameParty1.addMember(testPerson);
-        gameParty1.addMember(person2);
-        gameParty1.addMember(person3);
+
+        try {
+            gameParty.addMember(testPerson);
+            gameParty.addMember(person2);
+            gameParty.addMember(person3);
+        } catch (PersonDoesNotContainRoleException e) {
+            fail();
+        }
 
         assertEquals(0, testPerson.getGameStats().size());
 
-        testPerson.updateWinRate(gameParty1, 3, 3);
+        testPerson.updateWinRate(gameParty, 3, 3);
         assertTrue(testPerson.getGameStats().containsKey(person2.getName()));
         assertEquals(100, testPerson.getGameStats().get(person2.getName()).get(0));
         assertEquals(3, testPerson.getGameStats().get(person2.getName()).get(1));
@@ -133,7 +140,7 @@ class PersonTest {
 
         assertEquals(2, testPerson.getGameStats().size());
 
-        testPerson.updateWinRate(gameParty1, 0, 3);
+        testPerson.updateWinRate(gameParty, 0, 3);
         assertTrue(testPerson.getGameStats().containsKey(person2.getName()));
         assertEquals(50, testPerson.getGameStats().get(person2.getName()).get(0));
         assertEquals(3, testPerson.getGameStats().get(person2.getName()).get(1));
@@ -152,12 +159,17 @@ class PersonTest {
         testPerson.addRole(game1);
         person2.addRole(game1);
         person3.addRole(game1);
-        gameParty1.addMember(testPerson);
-        gameParty1.addMember(person2);
+
+        try {
+            gameParty.addMember(testPerson);
+            gameParty.addMember(person2);
+        } catch (PersonDoesNotContainRoleException e) {
+            fail();
+        }
 
         assertEquals(0, testPerson.getGameStats().size());
 
-        testPerson.updateWinRate(gameParty1, 3, 3);
+        testPerson.updateWinRate(gameParty, 3, 3);
         assertTrue(testPerson.getGameStats().containsKey(person2.getName()));
         assertEquals(100, testPerson.getGameStats().get(person2.getName()).get(0));
         assertEquals(3, testPerson.getGameStats().get(person2.getName()).get(1));
@@ -167,9 +179,13 @@ class PersonTest {
 
         GameParty newGameParty = new GameParty(game1, 3, "new party");
 
-        newGameParty.addMember(testPerson);
-        newGameParty.addMember(person2);
-        newGameParty.addMember(person3);
+        try {
+            newGameParty.addMember(testPerson);
+            newGameParty.addMember(person2);
+            newGameParty.addMember(person3);
+        } catch (PersonDoesNotContainRoleException e) {
+            fail();
+        }
 
         assertEquals(1, testPerson.getGameStats().size());
 

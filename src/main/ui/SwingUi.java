@@ -1,5 +1,8 @@
 package ui;
 
+import exceptions.GameNotInFinderException;
+import exceptions.NotInFinderException;
+import exceptions.PersonNotInFinderException;
 import model.*;
 import model.Event;
 import persistence.JsonReader;
@@ -212,7 +215,15 @@ public class SwingUi extends JPanel implements ActionListener {
                 gameSelected = g;
             }
         }
-        gamePartyFinder.addRoleToPerson(personSelected, gameSelected);
+        try {
+            gamePartyFinder.addRoleToPerson(personSelected, gameSelected);
+        } catch (PersonNotInFinderException pe) {
+            System.err.println("Person not found");
+        } catch (GameNotInFinderException ge) {
+            System.err.println("Game not found");
+        } catch (NotInFinderException ne) {
+            System.err.println("Not found exception thrown");
+        }
     }
 
     // MODIFIES: this

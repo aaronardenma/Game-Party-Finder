@@ -1,15 +1,14 @@
 package model;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.Writable;
 
-import java.util.ArrayList;
+import java.util.Objects;
 
 // Represents a Game with a name, list of players, and max party member integer
 public class Game implements Writable {
-    private String name;
-    private int maxPartyMembers;
+    private final String name;
+    private final int maxPartyMembers;
 
     // REQUIRES: non-zero length name, and maxPartyMembers integer greater than 0
     // EFFECTS: name on Game is set to name; listOfPlayers is set to an empty array list;
@@ -40,5 +39,20 @@ public class Game implements Writable {
         return json;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Game game = (Game) o;
+        return maxPartyMembers == game.maxPartyMembers && Objects.equals(name, game.name);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, maxPartyMembers);
+    }
 }

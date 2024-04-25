@@ -3,6 +3,7 @@ package model;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.Writable;
+import exceptions.PersonDoesNotContainRoleException;
 
 import java.util.ArrayList;
 
@@ -12,7 +13,7 @@ public class GameParty implements Writable {
     private int maxPartySize;
     private final Game game;
     private ArrayList<Person> currentMembers;
-    private String gamePartyName;
+    private final String gamePartyName;
 
     // REQUIRES: maxPartySize has an integer greater than 0
     // EFFECTS: maxPartySize on GameParty is set to maxPartySize;
@@ -29,9 +30,11 @@ public class GameParty implements Writable {
     // MODIFIES: this
     // EFFECTS: Add person to currentMembers list && increase currentSize by 1
     // if their roles contain the game of the GameParty
-    public void addMember(Person p) {
+    public void addMember(Person p) throws PersonDoesNotContainRoleException {
         if (p.getRoles().contains(game) && !currentMembers.contains(p)) {
             this.currentMembers.add(p);
+        } else if (!p.getRoles().contains(game)) {
+            throw new PersonDoesNotContainRoleException(p, game);
         }
     }
 

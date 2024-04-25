@@ -1,5 +1,6 @@
 package model;
 
+import exceptions.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.Writable;
@@ -56,14 +57,35 @@ public class GamePartyFinder implements Writable {
 
     // MODIFIES: gameParty
     // EFFECTS: adds person to gameParty
-    public void addPersonToGameParty(Person person, GameParty gameParty) {
-        gameParty.addMember(person);
+    public void addPersonToGameParty(Person person, GameParty gameParty) throws NotInFinderException {
+        if (!people.contains(person) && !gameParties.contains(gameParty)) {
+            throw new NotInFinderException("Person & Game Party not found");
+        } else if (!people.contains(person)) {
+            throw new PersonNotInFinderException(person);
+        } else if (!gameParties.contains(gameParty)) {
+            throw new PartyNotInFinderException(gameParty);
+        } else {
+            try {
+                gameParty.addMember(person);
+            } catch (PersonDoesNotContainRoleException personDoesNotContainRoleException) {
+                System.err.println(person.getName() + " does not contain Game Party role ("
+                        + gameParty.getGame().getName() + ")");
+            }
+        }
     }
 
     // MODIFIES: person
     // EFFECTS: add game to list of roles a person has
-    public void addRoleToPerson(Person person, Game game) {
-        person.addRole(game);
+    public void addRoleToPerson(Person person, Game game) throws NotInFinderException {
+        if (!people.contains(person) && !games.contains(game)) {
+            throw new NotInFinderException("Person & Game not found");
+        } else if (!people.contains(person)) {
+            throw new PersonNotInFinderException(person);
+        } else if (!games.contains(game)) {
+            throw new GameNotInFinderException(game);
+        } else {
+            person.addRole(game);
+        }
     }
 
     // MODIFIES: person
@@ -122,13 +144,17 @@ public class GamePartyFinder implements Writable {
     // MODIFIES: this
     // EFFECTS: update game statistics for every person in gameParty and remove gameParty from
     // this.gameParties
-    public void endSession(GameParty gameParty, float numOfWins, float numGamesPlayed) {
-        ArrayList<Person> members = gameParty.getCurrentMembers();
-        for (int i = 0; i < members.size(); i++) {
-            Person p = members.get(i);
-            p.updateWinRate(gameParty, numOfWins, numGamesPlayed);
+    public void endSession(GameParty gameParty, float numOfWins,
+                           float numGamesPlayed) throws PartyNotInFinderException {
+        if (!gameParties.contains(gameParty)) {
+            throw new PartyNotInFinderException(gameParty);
+        } else {
+            ArrayList<Person> members = gameParty.getCurrentMembers();
+            for (Person p : members) {
+                p.updateWinRate(gameParty, numOfWins, numGamesPlayed);
+            }
+            gameParties.remove(gameParty);
         }
-        gameParties.remove(gameParty);
     }
 
     // MODIFIES: this, GameParty

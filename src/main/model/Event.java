@@ -8,8 +8,8 @@ import java.util.Date;
  */
 public class Event {
     private static final int HASH_CONSTANT = 13;
-    private Date dateLogged;
-    private String description;
+    private final Date dateLogged;
+    private final String description;
 
     /**
      * Creates an event with the given description

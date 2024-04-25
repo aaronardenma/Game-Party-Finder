@@ -7,6 +7,7 @@ import persistence.Writable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static java.lang.Math.round;
 
@@ -88,8 +89,7 @@ public class Person implements Writable {
     // win rate, numOfWins, and numGamesPlayed with that person. If person is in gameStats, remove key and
     // replace with add numGamesPlayed, add numOfWins, and new win rate.
     public void updateWinRate(GameParty gameParty, float numOfWins, float numGamesPlayed) {
-        ArrayList<Person> members = new ArrayList<>();
-        gameParty.getCurrentMembers().forEach((p) -> members.add(p));
+        ArrayList<Person> members = new ArrayList<>(gameParty.getCurrentMembers());
         members.remove(this);
 
         for (Person p : members) {
@@ -150,5 +150,22 @@ public class Person implements Writable {
     // setter
     public void setGameStats(HashMap<String, ArrayList<Float>> hashMap) {
         this.gameStats = hashMap;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Person person = (Person) o;
+        return Objects.equals(name, person.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

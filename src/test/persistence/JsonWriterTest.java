@@ -1,5 +1,6 @@
 package persistence;
 
+import exceptions.NotInFinderException;
 import model.Game;
 import model.GameParty;
 import model.GamePartyFinder;
@@ -15,7 +16,6 @@ public class JsonWriterTest {
     @Test
     void testWriterInvalidFile() {
         try {
-            GamePartyFinder gpf = new GamePartyFinder();
             JsonWriter writer = new JsonWriter("./data/my\0illegal:fileName.json");
             writer.open();
             fail("IOException was expected");
@@ -57,13 +57,19 @@ public class JsonWriterTest {
             gpf.addPerson(person3);
             gpf.addGame(game);
             gpf.addGameParty(party);
-            gpf.addRoleToPerson(person, game);
-            gpf.addRoleToPerson(person2, game);
-            gpf.addRoleToPerson(person3, game);
-            gpf.addPersonToGameParty(person, party);
-            gpf.addPersonToGameParty(person2, party);
-            gpf.addPersonToGameParty(person3, party);
-            gpf.endSession(party, 3, 3);
+
+            try {
+                gpf.addRoleToPerson(person, game);
+                gpf.addRoleToPerson(person2, game);
+                gpf.addRoleToPerson(person3, game);
+                gpf.addPersonToGameParty(person, party);
+                gpf.addPersonToGameParty(person2, party);
+                gpf.addPersonToGameParty(person3, party);
+                gpf.endSession(party, 3, 3);
+            } catch (NotInFinderException e) {
+                fail();
+            }
+
             JsonWriter writer = new JsonWriter("./data/testWriterGamePartyFinder.json");
             writer.open();
             writer.write(gpf);

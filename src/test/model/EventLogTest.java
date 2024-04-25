@@ -27,7 +27,7 @@ public class EventLogTest {
 
     @Test
     public void testLogEvent() {
-        List<Event> l = new ArrayList<Event>();
+        List<Event> l = new ArrayList<>();
 
         EventLog el = EventLog.getInstance();
         for (Event next : el) {

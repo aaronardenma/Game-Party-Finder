@@ -1,5 +1,6 @@
 package ui;
 
+import exceptions.*;
 import model.*;
 import persistence.JsonReader;
 import persistence.JsonWriter;
@@ -146,7 +147,15 @@ public class GamePartyApp {
         System.out.println("Who should be added to a game party?");
         Person person = getPersonFromUserResponse();
         System.out.println("Which Game Party should " + person.getName() + " be added to?");
-        partyFinder.addPersonToGameParty(person, getGamePartyFromUserResponse());
+        try {
+            partyFinder.addPersonToGameParty(person, getGamePartyFromUserResponse());
+        } catch (PersonNotInFinderException personNotInFinderException) {
+            System.err.println("Person not found");
+        } catch (PartyNotInFinderException partyNotInFinderException) {
+            System.err.println("Game Party not found");
+        } catch (NotInFinderException notInFinderException) {
+            System.err.println("Not found exception thrown");
+        }
     }
 
     // MODIFIES: this
@@ -156,7 +165,15 @@ public class GamePartyApp {
         Person person = getPersonFromUserResponse();
         System.out.println("What Game should we add to " + person.getName() + " list of roles?");
         Game newGame = getGameFromUserResponse();
-        partyFinder.addRoleToPerson(person, newGame);
+        try {
+            partyFinder.addRoleToPerson(person, newGame);
+        } catch (PersonNotInFinderException pe) {
+            System.err.println("Person not found");
+        } catch (GameNotInFinderException ge) {
+            System.err.println("Game not found");
+        } catch (NotInFinderException ne) {
+            System.err.println("Not found exception thrown");
+        }
     }
 
     // MODIFIES: this
@@ -287,7 +304,13 @@ public class GamePartyApp {
         int numGamesPlayed = scanner.nextInt();
         System.out.println("How many games did you win?");
         int numGamesWon = scanner.nextInt();
-        partyFinder.endSession(gamePartySelected, numGamesWon, numGamesPlayed);
+
+        try {
+            partyFinder.endSession(gamePartySelected, numGamesWon, numGamesPlayed);
+        } catch (PartyNotInFinderException partyNotInFinderException) {
+            System.err.println("Party not found");
+        }
+
     }
 
     // EFFECTS: return a Person specified by user response from a list of people in GamePartyFinder

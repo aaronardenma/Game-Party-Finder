@@ -1,5 +1,6 @@
 package persistence;
 
+import exceptions.NotInFinderException;
 import model.Game;
 import model.GameParty;
 import model.GamePartyFinder;
@@ -16,7 +17,7 @@ public class JavaReaderTest {
     void testReaderNonExistentFile() {
         JsonReader reader = new JsonReader("./data/noSuchFile.json");
         try {
-            GamePartyFinder gpf = reader.read();
+            reader.read();
             fail("IOException expected");
         } catch (IOException e) {
             // pass
@@ -46,8 +47,14 @@ public class JavaReaderTest {
             gpf.addPerson(person);
             gpf.addGame(game);
             gpf.addGameParty(party);
-            gpf.addRoleToPerson(person, game);
-            gpf.addPersonToGameParty(person, party);
+
+            try {
+                gpf.addRoleToPerson(person, game);
+                gpf.addPersonToGameParty(person, party);
+            } catch (NotInFinderException e) {
+                fail();
+            }
+
             JsonWriter writer = new JsonWriter("./data/testReaderGamePartyFinder.json");
             writer.open();
             writer.write(gpf);
