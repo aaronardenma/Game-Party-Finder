@@ -141,7 +141,7 @@ public class JsonReader {
         gpf.addGame(game);
         gpf.addGameParty(gameParty);
     }
-
+     
     // EFFECTS: Convert JSONArray with people representation to ArrayList
     private ArrayList<Person> toArrayPersonList(JSONArray array) {
         ArrayList<Person> listPerson = new ArrayList<>();

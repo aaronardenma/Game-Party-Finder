@@ -28,7 +28,7 @@ public class GamePartyFinder implements Writable {
         if (!getPeople().contains(person)) {
             people.add(person);
             EventLog.getInstance().logEvent(new Event("(Person: " + person.getName()
-                    + ") added to Game Party Finder."));
+                    + ") has been added to the Game Party Finder."));
         }
     }
 
@@ -41,7 +41,7 @@ public class GamePartyFinder implements Writable {
         if (!gameNames.contains(game.getName().toLowerCase())) {
             games.add(game);
             EventLog.getInstance().logEvent(new Event("(Game: " + game.getName()
-                    + ") added to Game Party Finder."));
+                    + ") has been added to the Game Party Finder."));
         }
     }
 
@@ -53,7 +53,7 @@ public class GamePartyFinder implements Writable {
         if (!partyNames.contains(gameParty.getName().toLowerCase())) {
             gameParties.add(gameParty);
             EventLog.getInstance().logEvent(new Event(
-                    "(Game Party: " + gameParty.getName() + ") added to Game Party Finder."));
+                    "(Game Party: " + gameParty.getName() + ") has been added to the Game Party Finder."));
         }
     }
 
@@ -69,13 +69,23 @@ public class GamePartyFinder implements Writable {
         } else {
             try {
                 gameParty.addMember(person);
-                EventLog.getInstance().logEvent(new Event(
-                        "(Person: " + person.getName() + ") has been added to (Game Party: "
-                                + gameParty.getName() + ")"));
             } catch (PersonDoesNotContainRoleException personDoesNotContainRoleException) {
                 System.err.println(person.getName() + " does not contain Game Party role (Game: "
                         + gameParty.getGame().getName() + ")");
             }
+        }
+    }
+
+    // MODIFIES: gameParty
+    // EFFECTS: if gameParty not in this, throw PartyNotInFinderException. Else, remove person from gameParty
+    public void removePersonFromGameParty(GameParty gameParty, Person person) throws PartyNotInFinderException {
+        if (!gameParties.contains(gameParty)) {
+            throw new PartyNotInFinderException(gameParty);
+        } else {
+            gameParty.removeMember(person);
+            EventLog.getInstance().logEvent(new Event(
+                    "(Person: " + person.getName() + ") has been removed from "
+                            + "(Game Party: " + gameParty.getName() + ")"));
         }
     }
 

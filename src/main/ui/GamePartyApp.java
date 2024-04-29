@@ -296,7 +296,7 @@ public class GamePartyApp {
     }
 
     // MODIFIES: this
-    // EFFECTS: Allows user to update winrate statistics with one another and remove game party
+    // EFFECTS: Allows user to update win rate statistics with one another and remove game party
     private void endGamePartySession() {
         System.out.println("Which of your Game Parties would you like to reduce its size?");
         GameParty gamePartySelected = getGamePartyFromUserResponse();

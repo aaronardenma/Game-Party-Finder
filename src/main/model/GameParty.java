@@ -33,6 +33,9 @@ public class GameParty implements Writable {
     public void addMember(Person p) throws PersonDoesNotContainRoleException {
         if (p.getRoles().contains(game) && !currentMembers.contains(p)) {
             this.currentMembers.add(p);
+            EventLog.getInstance().logEvent(new Event(
+                    "(Person: " + p.getName() + ") has been added to (Game Party: "
+                            + getName() + ")"));
         } else if (!p.getRoles().contains(game)) {
             throw new PersonDoesNotContainRoleException(p, game);
         }
@@ -41,7 +44,6 @@ public class GameParty implements Writable {
     // REQUIRES: currentMembers.contains(p)
     // MODIFIES: this
     // EFFECTS: Removes person from currentMembers list
-    // and reduces currentSize by 1 if currentMembers contains the Person p
     public void removeMember(Person p) {
         if (currentMembers.contains(p)) {
             this.currentMembers.remove(p);
