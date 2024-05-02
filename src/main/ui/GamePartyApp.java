@@ -15,8 +15,8 @@ public class GamePartyApp {
     private static final String JSON_STORE = "./data/testWriterGamePartyFinder.json";
     private GamePartyFinder partyFinder;
     private Scanner scanner;
-    private JsonWriter jsonWriter;
-    private JsonReader jsonReader;
+    private final JsonWriter jsonWriter;
+    private final JsonReader jsonReader;
 
     // EFFECTS: runs the Game Party application
     public GamePartyApp() throws FileNotFoundException {

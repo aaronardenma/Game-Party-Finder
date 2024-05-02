@@ -1,9 +1,6 @@
 package ui;
 
-import exceptions.GameNotInFinderException;
-import exceptions.NotInFinderException;
-import exceptions.PartyNotInFinderException;
-import exceptions.PersonNotInFinderException;
+import exceptions.*;
 import model.*;
 import model.Event;
 import persistence.JsonReader;
@@ -16,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+//import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
@@ -23,56 +21,78 @@ import java.util.stream.Collectors;
 public class SwingUi extends JPanel {
     private GamePartyFinder gamePartyFinder;
     private static JMenuBar menuBar;
-    private final JMenu createMenu;
-    private final JMenu personMenu;
-    private final JMenu gameMenu;
-    private final JMenu gamePartyMenu;
+    private JMenu createMenu;
+    private JMenu personMenu;
+    private JMenu gameMenu;
+    private JMenu gamePartyMenu;
     private JButton submitButton;
     private String personNameSelected;
     private String gameNameSelected;
     private String gamePartyNameSelected;
     private static final String JSON_STORE = "./data/testWriterGamePartyFinder.json";
+//    private static final ArrayList<String> CLASSES = new ArrayList<>(Arrays.asList("Person", "Game", "GameParty"));
+//    private static final ArrayList<String> FUNCTIONS = new ArrayList<>(Arrays.asList("Add Person to GameParty",
+//            "End Session", "Add Role", "Delete Role", "Create GameParty"));
     private final JsonWriter jsonWriter;
     private final JsonReader jsonReader;
 
     // EFFECTS: Create GamePartyFinder and JMenuBar. Add Person, Game, and Game Parties menu item to Menu Bar. Create
     // save and load buttons with JsonWriter and JsonReader constructors. set personNameSelected and gameNameSelected
     // to null. Create ImageIcon of video-game.png to display as a splash screen.
-    @SuppressWarnings("methodlength")
     public SwingUi() {
         gamePartyFinder = new GamePartyFinder();
-        menuBar = new JMenuBar();
-        createMenu = new JMenu("Create");
-        personMenu = new JMenu("People");
-        gameMenu = new JMenu("Game");
-        gamePartyMenu = new JMenu("Game Parties");
         jsonWriter = new JsonWriter(JSON_STORE);
         jsonReader = new JsonReader(JSON_STORE);
         personNameSelected = null;
         gameNameSelected = null;
         gamePartyNameSelected = null;
-        menuBar.add(createMenu);
-        menuBar.add(personMenu);
-        menuBar.add(gameMenu);
-        menuBar.add(gamePartyMenu);
+
         setLayout(new BorderLayout());
-        String splashIconPath = "video-game.png";
-        JLabel imageLabel = new JLabel(scaleImageIcon(createImageIcon(splashIconPath), 200, 200));
+        createMenuBar();
+        addSplashImage();
+        displayGames();
+        addSaveLoadButtons();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: adds a loading screen splash image
+    private void addSplashImage() {
+        ImageIcon imageIcon = createImageIcon("video-game.png");
+        ImageIcon scaledImageIcon = scaleImageIcon(imageIcon, 200, 200);
+        JLabel imageLabel = new JLabel(scaledImageIcon);
         add(imageLabel, BorderLayout.CENTER);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: creates a new menu bar with menu items: "Create", "People", "Game", "Game Parties". Adds corresponding
+    // menu functionalities
+    private void createMenuBar() {
+        menuBar = new JMenuBar();
+        createMenu = new JMenu("Create");
+        personMenu = new JMenu("People");
+        gameMenu = new JMenu("Game");
+        gamePartyMenu = new JMenu("Game Parties");
 
         addCreateMenuItems();
         addPersonMenuItems();
         addGameMenuItems();
         addGamePartyMenuItems();
-        displayGames();
-        addSaveLoadButtons();
+
+        menuBar.add(createMenu);
+        menuBar.add(personMenu);
+        menuBar.add(gameMenu);
+        menuBar.add(gamePartyMenu);
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds menu items to the Create Menu
     private void addCreateMenuItems() {
         JMenuItem addPersonItem = new JMenuItem("Add Person");
         addPersonItem.addActionListener(e -> addPersonFields());
+
         JMenuItem addGameItem = new JMenuItem("Add Game");
         addGameItem.addActionListener(e -> addGameFields());
+
         JMenuItem addGamePartyItem = new JMenuItem("Create Game Party");
         addGamePartyItem.addActionListener(e -> createGameParty());
 
@@ -85,14 +105,14 @@ public class SwingUi extends JPanel {
     // EFFECT: adds menu items to the Person Menu
     private void addPersonMenuItems() {
         JMenuItem addRoleItem = new JMenuItem("Add Role");
-        addRoleItem.addActionListener(e -> addRoleFields());
+        addRoleItem.addActionListener(e -> createAddRoleToPersonFields());
 
         JMenuItem deleteRoleItem = new JMenuItem("Delete Role");
         deleteRoleItem.addActionListener(e -> deleteRoles());
 
         JMenuItem addToGamePartyItem = new JMenuItem("Add to Game Party");
         addToGamePartyItem.addActionListener(e ->
-                addPersonToGamePartySelectionDialogs("Person", false));
+                createAddPersonToGamePartyFields());
 
         personMenu.add(addRoleItem);
         personMenu.add(deleteRoleItem);
@@ -113,7 +133,7 @@ public class SwingUi extends JPanel {
     private void addGamePartyMenuItems() {
         JMenuItem removePersonFromGameParty = new JMenuItem("Remove Party Member");
         removePersonFromGameParty.addActionListener(e ->
-                addRemovePersonFromGamePartySelectionDialogs("Game Party", false));
+                addRemovePersonFromGamePartySelectionDialogs("GameParty", false));
 
         JMenuItem endGameSession = new JMenuItem("End Game Party Session");
         endGameSession.addActionListener(e -> endGameSession());
@@ -128,13 +148,14 @@ public class SwingUi extends JPanel {
         removeAll();
         JLabel nameLabel = new JLabel("Name: ");
         JTextField nameField = new JTextField(20);
+        nameField.setPreferredSize(new Dimension(20, 5));
         nameField.addActionListener(e -> {
             submitButton.doClick(); // Simulate button click when Enter is pressed
         });
 
-        JPanel labelPane = new JPanel(new GridLayout(0, 1));
+        JPanel labelPane = new JPanel(new GridLayout(1, 1));
         labelPane.add(nameLabel);
-        JPanel fieldPane = new JPanel(new GridLayout(0, 1));
+        JPanel fieldPane = new JPanel(new GridLayout(1, 1));
         fieldPane.add(nameField);
 
         createLabelFieldPanel(labelPane, fieldPane);
@@ -147,110 +168,182 @@ public class SwingUi extends JPanel {
     // MODIFIES: this, gamePartyFinder
     // EFFECTS: create a submit button for person name text field that creates a new Person based on that name
     private JButton createAddPersonSubmitButton(JTextField nameField) {
-        // Create a submit button
         submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
-            // Get the text from the text field
             String name = nameField.getText();
-            gamePartyFinder.addPerson(new Person(name));
+            if (name.isEmpty()) {
+                try {
+                    returnOriginalState();
+                    throw new InputEmptyException("Person Name");
+                } catch (InvalidInputException ex) {
+                    ex.printStackTrace();
+                }
+            } else {
+                gamePartyFinder.addPerson(new Person(name));
+            }
             returnOriginalState();
         });
         return submitButton;
     }
 
     // MODIFIES: this
-    // EFFECTS: calls openPersonAndGameSelectionDialog() to add selection dialogs to select person and game to add
-    private void addRoleFields() {
-        choosePersonAndRoleThenAdd("Person", false);
-
+    // EFFECTS: calls openClassSelectionDialog() to add selection dialogs to select person
+    private void createAddRoleToPersonFields() {
+        openClassSelectionDialog("Person", "Add Role");
     }
 
     // MODIFIES: this
-    // EFFECTS: calls openPersonAndGameSelectionDialog() to add selection dialogs to select person and game to add
-    private void choosePersonAndRoleThenAdd(String className, Boolean last) {
+    // EFFECTS: add JScrollPane to this with an itemList from a JList with values from getGamePartyFinderFieldListNames
+    // with className. Create a button panel with a submit button createSelectionDialogSubmitButton()
+    private void openClassSelectionDialog(String className, String function) {
         removeAll();
         JList<String> itemList;
 
         try {
             itemList = new JList<>(getGamePartyFinderFieldListNames(className).toArray(new String[0]));
-        } catch (NoSuchElementException noSuchElementException) {
-            System.err.println("List of " + className + " is empty");
+        } catch (NoSuchElementException ex) {
+            ex.printStackTrace();
+            returnOriginalState();
             return;
         }
 
         setLayout(new BorderLayout());
         add(new JScrollPane(itemList), BorderLayout.CENTER);
-        createButtonPanel(createAddRoleSetButton(className, last, itemList));
+        createButtonPanel(createSelectionDialogSubmitButton(className, itemList, function));
 
         revalidate();
         repaint();
     }
 
-    private JButton createAddRoleSetButton(String className, Boolean last, JList<String> itemList) {
-        JButton setButton = new JButton("Set");
-
+    // EFFECTS: returns a "Submit" JButton that when className equals to "Person", set personNameSelected field as a
+    // selected value from itemList. Else if className equals to "Game", set gameNameSelected field to a selected
+    // value from itemList, then add selected gameNameSelected Game to selected personNameSelected Person. Then check
+    // for additional functionality or method calls from switchSelectionDialogSubmitButton()
+    private JButton createSelectionDialogSubmitButton(String className, JList<String> itemList, String function) {
+        JButton setButton = new JButton("Submit");
         setButton.addActionListener(e -> {
             if (className.equals("Person")) {
                 personNameSelected = itemList.getSelectedValue();
             } else if (className.equals("Game")) {
                 gameNameSelected = itemList.getSelectedValue();
-                addRole();
+            } else if (className.equals("GameParty")) {
+                gamePartyNameSelected = itemList.getSelectedValue();
+            } else {
+                throw new NoSuchElementException();
             }
-            checkRecursiveAddRole(last);
+
+            switchSelectionDialogSubmitButton(className, function);
         });
         return setButton;
     }
 
+    // EFFECTS: if function isn't in FUNCTIONS or className isn't in CLASSES, throw new InvalidInputException.
+    // Else, call switchSelectionDialogSubmitButtonFUNCTION for different FUNCTIONS
+    private void switchSelectionDialogSubmitButton(String className, String function) {
+        switchSelectionDialogSubmitButtonAddRole(function, className);
+        switchSelectionDialogSubmitButtonDeleteRole(function, className);
+        switchSelectionDialogSubmitButtonCreateGameParty(function, className);
+        switchSelectionDialogSubmitButtonAddPersonToGameParty(function, className);
+        switchSelectionDialogSubmitButtonEndSession(function, className);
+    }
+
+    // EFFECTS: if function equals "Add Role" and className equals "Person", openClassSelection for class "Game" and
+    // function "Add Role". Else if, function equals "Add Role" and className equals "Game", addRoleToPerson(). Else,
+    // throw new InvalidInputException.
+    private void switchSelectionDialogSubmitButtonAddRole(String function, String className) {
+        if (function.equals("Add Role") && className.equals("Person")) {
+            openClassSelectionDialog("Game", "Add Role");
+        } else if (function.equals("Add Role") && className.equals("Game")) {
+            addRoleToPerson();
+        }
+    }
+
+    // EFFECTS: if function equals "Delete Role" and className equals "Person", viewPersonRolesSelectionDialogToDelete.
+    // Else if, function equals "Delete Role" and className equals "Game", deleteRoleFromPersonSelected(). Else,
+    // throw new InvalidInputException.
+    private void switchSelectionDialogSubmitButtonDeleteRole(String function, String className) {
+        if (function.equals("Delete Role") && className.equals("Person")) {
+            viewPersonRolesSelectionDialogToDelete();
+        } else if (function.equals("Delete Role") && className.equals("Game")) {
+            deleteRoleFromPersonSelected();
+        }
+    }
+
+    // EFFECTS: if function equals "Create GameParty" and className equals "Game", addCreateGamePartyFields().
+    private void switchSelectionDialogSubmitButtonCreateGameParty(String function, String className) {
+        if (function.equals("Create GameParty") && className.equals("Game")) {
+            addCreateGamePartyFields();
+        }
+    }
+
+    // EFFECTS: if function equals "Add Person to GameParty" and className equals "Person",
+    // viewPersonRolesSelectionDialogToDelete. Else if, function equals "Add Person to GameParty" and className equals
+    // "GameParty", deleteRoleFromPersonSelected()
+    private void switchSelectionDialogSubmitButtonAddPersonToGameParty(String function, String className) {
+        if (function.equals("Add Person to GameParty") && className.equals("Person")) {
+            openEligibleGamePartiesSelectionDialogAddToGameParty("GameParty", "Add Person to GameParty");
+        } else if (function.equals("Add Person to GameParty") && className.equals("GameParty")) {
+            addPersonToGameParty();
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: add JScrollPane to this with an itemList from a JList with values from getGamePartyFinderFieldListNames
+    // with className. Create a button panel with a submit button createSelectionDialogSubmitButton()
+    private void openEligibleGamePartiesSelectionDialogAddToGameParty(String className, String function) {
+        removeAll();
+        JList<String> itemList;
+        Person person = (Person) matchNameToClass("Person");
+        ArrayList<String> eligibleGameParties = new ArrayList<>();
+
+        for (Game role : person.getRoles()) {
+            for (GameParty gameParty: gamePartyFinder.getGameParties()) {
+                if (gameParty.getGame().equals(role)) {
+                    eligibleGameParties.add(gameParty.getName());
+                }
+            }
+        }
+
+        try {
+            itemList = new JList<>(eligibleGameParties.toArray(new String[0]));
+        } catch (NoSuchElementException ex) {
+            ex.printStackTrace();
+            returnOriginalState();
+            return;
+        }
+
+        setLayout(new BorderLayout());
+        add(new JScrollPane(itemList), BorderLayout.CENTER);
+        createButtonPanel(createSelectionDialogSubmitButton(className, itemList, function));
+
+        revalidate();
+        repaint();
+    }
+
+    // EFFECTS: if function equals "End Session" and className equals "GameParty", addEndGameSessionFields().
+    private void switchSelectionDialogSubmitButtonEndSession(String function, String className) {
+        if (function.equals("End Session") && className.equals("GameParty")) {
+            addEndGameSessionFields();
+        }
+    }
+
+
     // MODIFIES: this, gamePartyFinder
     // EFFECTS: use personNameSelected and gameNameSelected to find person and game. then add role game to person
-    private void addRole() {
+    private void addRoleToPerson() {
         Person person = (Person) matchNameToClass("Person");
         Game game = (Game) matchNameToClass("Game");
 
         try {
             gamePartyFinder.addRoleToPerson(person, game);
-        } catch (PersonNotInFinderException pe) {
-            System.err.println("Person not found");
-        } catch (GameNotInFinderException ge) {
-            System.err.println("Game not found");
-        } catch (NotInFinderException ne) {
-            System.err.println("Not found exception thrown");
-        }
-    }
-
-    private Object matchNameToClass(String className) {
-        Object object = null;
-        if (className.equals("Person")) {
-            for (Person p : gamePartyFinder.getPeople()) {
-                if (p.getName().equals(personNameSelected)) {
-                    object = p;
-                }
-            }
-        } else if (className.equals("Game")) {
-            for (Game g : gamePartyFinder.getGames()) {
-                if (g.getName().equals(gameNameSelected)) {
-                    object = g;
-                }
-            }
-        } else if (className.equals("Game Party")) {
-            for (GameParty gp : gamePartyFinder.getGameParties()) {
-                if (gp.getName().equals(gamePartyNameSelected)) {
-                    object = gp;
-                }
-            }
-        }
-        return object;
-    }
-
-    // MODIFIES: this
-    // EFFECTS: if last is true, go back to the original state of the ui, if not, continue with the game
-    // selection dialog
-    private void checkRecursiveAddRole(Boolean last) {
-        if (last) {
             setVisible(true);
             returnOriginalState();
-        } else {
-            choosePersonAndRoleThenAdd("Game", true);
+        } catch (PersonNotInFinderException pe) {
+            pe.printStackTrace();
+        } catch (GameNotInFinderException ge) {
+            ge.printStackTrace();
+        } catch (NotInFinderException ne) {
+            ne.printStackTrace();
         }
     }
 
@@ -258,58 +351,35 @@ public class SwingUi extends JPanel {
     // EFFECTS: open people selection dialog and view roles to allow user to select role to delete with a cancel and
     // submit button
     private void deleteRoles() {
+        openClassSelectionDialog("Person", "Delete Role");
+    }
+
+    // MODIFIES: this, gamePartyFinder
+    // EFFECTS: create a selection dialog to display all roles of a person that can be submitted to delete role
+    // from person with a cancel and submit button
+    private void viewPersonRolesSelectionDialogToDelete() {
         removeAll();
-        JList<String> itemList = new JList<>(gamePartyFinder.getPeopleNames().toArray(new String[0]));
+        Person person = (Person) matchNameToClass("Person");
+        JList<String> itemList = new JList<>(person.getRoleNames().toArray(new String[0]));
         JScrollPane scrollPane = new JScrollPane(itemList);
-        JButton setButton = new JButton("Set");
-
-        setButton.addActionListener(e -> {
-            personNameSelected = itemList.getSelectedValue();
-            ArrayList<Person> people = gamePartyFinder.getPeople();
-
-            for (Person p : people) {
-                if (p.getName().equals(personNameSelected)) {
-                    viewPersonRolesSelectionDialogToDelete(p);
-                    break;
-                }
-            }
-        });
 
         setLayout(new BorderLayout());
         add(scrollPane, BorderLayout.CENTER);
-        createButtonPanel(setButton);
+        createButtonPanel(createSelectionDialogSubmitButton("Game", itemList, "Delete Role"));
 
         revalidate();
         repaint();
     }
 
     // MODIFIES: this, gamePartyFinder
-    // EFFECTS: create a selection dialog to display all roles of a person that can be submitted to delete role
-    // from person with a cancel and submit button
-    private void viewPersonRolesSelectionDialogToDelete(Person p) {
-        removeAll();
-        JList<String> itemList = new JList<>(p.getRoleNames().toArray(new String[0]));
-        JScrollPane scrollPane = new JScrollPane(itemList);
-        JButton setButton = new JButton("Set");
+    // EFFECTS: get Game and Person from matchNameToClass(), and delete game from person in gamePartyFinder through
+    // gamePartyFinder.deleteRoleFromPerson() then returnOriginalState()
+    private void deleteRoleFromPersonSelected() {
+        Game role = (Game) matchNameToClass("Game");
+        Person person = (Person) matchNameToClass("Person");
 
-        setButton.addActionListener(e -> {
-            gameNameSelected = itemList.getSelectedValue();
-            Game gameSelected = null;
-            for (Game g : gamePartyFinder.getGames()) {
-                if (g.getName().equals(gameNameSelected)) {
-                    gameSelected = g;
-                }
-            }
-            gamePartyFinder.deleteRoleFromPerson(p, gameSelected);
-            returnOriginalState();
-        });
-
-        setLayout(new BorderLayout());
-        add(scrollPane, BorderLayout.CENTER);
-        createButtonPanel(setButton);
-
-        revalidate();
-        repaint();
+        gamePartyFinder.deleteRoleFromPerson(person, role);
+        returnOriginalState();
     }
 
     // MODIFIES: this, gamePartyFinder
@@ -319,9 +389,7 @@ public class SwingUi extends JPanel {
         JLabel nameLabel = new JLabel("Game Name: ");
         JLabel maxPartySizeLabel = new JLabel("Max Party Size: ");
         JTextField nameField = new JTextField(10);
-//        nameField.addActionListener(this);
         JFormattedTextField maxPartySizeField = new JFormattedTextField(NumberFormat.getNumberInstance());
-//        maxPartySizeField.addActionListener(this);
         maxPartySizeField.setColumns(10);
 
         JPanel labelPane = new JPanel(new GridLayout(0, 1));
@@ -339,37 +407,30 @@ public class SwingUi extends JPanel {
         repaint();
     }
 
-    private void createGameParty() {
-        removeAll();
-        JList<String> itemList;
-
-        try {
-            itemList = new JList<>(getGamePartyFinderFieldListNames("Game").toArray(new String[0]));
-        } catch (NoSuchElementException noSuchElementException) {
-            System.err.println("List of Game is empty");
-            return;
-        }
-
-        setLayout(new BorderLayout());
-        add(new JScrollPane(itemList), BorderLayout.CENTER);
-        createButtonPanel(makeCreateGamePartySetButton(itemList));
-
-        revalidate();
-        repaint();
-    }
-
-    private JButton makeCreateGamePartySetButton(JList<String> itemList) {
-        JButton setButton = new JButton("Set");
-
-        setButton.addActionListener(e -> {
-            gameNameSelected = itemList.getSelectedValue();
-            Game game = (Game) matchNameToClass("Game");
-            addCreateGamePartyFields(game);
+    // MODIFIES: this, gamePartyFinder
+    // EFFECTS: create a submit button that upon action, adds a game to the game party finder
+    private JButton createAddGameSubmitButton(JTextField nameField, JFormattedTextField maxPartySizeField) {
+        submitButton = new JButton("Submit");
+        submitButton.addActionListener(e -> {
+            String name = nameField.getText();
+            int maxPartySize = ((Long) maxPartySizeField.getValue()).intValue();
+            gamePartyFinder.addGame(new Game(name, maxPartySize));
+            returnOriginalState();
         });
-        return setButton;
+
+        return submitButton;
     }
 
-    private void addCreateGamePartyFields(Game game) {
+    // MODIFIES: this
+    // EFFECTS: open up class selection dialog for Game class and apply function "Create Game Party: Game"
+    private void createGameParty() {
+        openClassSelectionDialog("Game", "Create GameParty");
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Create JTextField and JFormattedTextField accepting Numbers only for "Party Name" and "Max Party Size".
+    // Then create a button panel with a set button by createAddGamePartySubmitButton().
+    private void addCreateGamePartyFields() {
         removeAll();
         JLabel nameLabel = new JLabel("Party Name: ");
         JLabel maxPartySizeLabel = new JLabel("Max Party Size: ");
@@ -386,78 +447,61 @@ public class SwingUi extends JPanel {
         fieldPane.add(maxPartySizeField);
 
         createLabelFieldPanel(labelPane, fieldPane);
-        createButtonPanel(createAddGamePartySubmitButton(game, nameField, maxPartySizeField));
+
+        createButtonPanel(createAddGamePartySubmitButton(nameField, maxPartySizeField));
 
         revalidate();
         repaint();
     }
 
-    private void addPersonToGamePartySelectionDialogs(String className, boolean last) {
-        removeAll();
-        JList<String> itemList;
+    // MODIFIES: this, gamePartyFinder
+    // EFFECTS: Create a submit button that adds a GameParty to the gamePartyFinder for a specified game with the
+    // partyName and maxPartySize from JTextField and JFormattedTextField
+    private JButton createAddGamePartySubmitButton(JTextField partyName, JFormattedTextField maxPartySize) {
+        JButton button = new JButton("Submit");
+        Game game = (Game) matchNameToClass("Game");
 
-        try {
-            itemList = new JList<>(getGamePartyFinderFieldListNames(className).toArray(new String[0]));
-        } catch (NoSuchElementException noSuchElementException) {
-            System.err.println("List of " + className + " is empty");
-            return;
-        }
-
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(createCancelButton());
-        buttonPanel.add(createAddPersonToGamePartySetButton(className, last, itemList));
-
-        setLayout(new BorderLayout());
-        add(new JScrollPane(itemList), BorderLayout.CENTER);
-        add(buttonPanel, BorderLayout.SOUTH);
-
-        revalidate();
-        repaint();
-    }
-
-    private JButton createAddPersonToGamePartySetButton(String className, boolean last, JList<String> itemList) {
-        JButton setButton = new JButton("Set");
-
-        setButton.addActionListener(e -> {
-            if (className.equals("Person")) {
-                personNameSelected = itemList.getSelectedValue();
-            } else if (className.equals("Game Party")) {
-                gamePartyNameSelected = itemList.getSelectedValue();
-                addPersonToGameParty();
-            }
-            checkRecursiveAddPersonToGameParty(last);
+        button.addActionListener(e -> {
+            String name = partyName.getText();
+            int partySize = ((Long) maxPartySize.getValue()).intValue();
+            gamePartyFinder.addGameParty(new GameParty(game, partySize, name));
+            returnOriginalState();
         });
 
-        return setButton;
+        return button;
     }
 
     // MODIFIES: this
-    // EFFECTS: if last is true, go back to the original state of the ui, if not, continue with the game
-    // selection dialog
-    private void checkRecursiveAddPersonToGameParty(Boolean last) {
-        if (last) {
-            setVisible(true);
-            returnOriginalState();
-        } else {
-            addPersonToGamePartySelectionDialogs("Game Party", true);
-        }
+    // EFFECTS: open up class selection dialog for Person class and apply function "Add Person to Game Party: Person"
+    private void createAddPersonToGamePartyFields() {
+        openClassSelectionDialog("Person", "Add Person to GameParty");
     }
 
+    // MODIFIES: gamePartyFinder
+    // EFFECTS: add personNameSelected Person and gamePartyNameSelected GameParty to the gamePartyFinder. Then
+    // returnOriginalState()
     private void addPersonToGameParty() {
         Person person = (Person) matchNameToClass("Person");
-        GameParty gameParty = (GameParty) matchNameToClass("Game Party");
+        GameParty gameParty = (GameParty) matchNameToClass("GameParty");
 
         try {
             gamePartyFinder.addPersonToGameParty(person, gameParty);
-        } catch (PersonNotInFinderException personNotInFinderException) {
-            System.err.println("Person not found");
-        } catch (PartyNotInFinderException partyNotInFinderException) {
-            System.err.println("Game Party not found");
+            returnOriginalState();
+        } catch (PersonNotInFinderException pe) {
+            pe.printStackTrace();
+        } catch (PartyNotInFinderException pex) {
+            pex.printStackTrace();
         } catch (NotInFinderException e) {
-            System.err.println("Not found in finder");
+            e.printStackTrace();
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: if selectionDialogClass = "Person", set ArrayList<String> valuesList getGamePartySelectedMemberNames().
+    // Else if, selectionDialogClass is "GameParty", set valuesList getGamePartyFinderFieldListNames(). Else, throw new
+    // NoSuchElementException. Then check if valuesList is empty, if so, throw new NoSuchElementException. Catch
+    // NoSuchElementException and print stack trace. create JList with valuesList and create button panel with
+    // createRemovePersonFromGamePartySetButton().
     private void addRemovePersonFromGamePartySelectionDialogs(String selectionDialogClass, boolean last) {
         removeAll();
         ArrayList<String> valuesList;
@@ -465,16 +509,16 @@ public class SwingUi extends JPanel {
         try {
             if (selectionDialogClass.equals("Person")) {
                 valuesList = getGamePartySelectedMemberNames();
-            } else if (selectionDialogClass.equals("Game Party")) {
+            } else if (selectionDialogClass.equals("GameParty")) {
                 valuesList = getGamePartyFinderFieldListNames(selectionDialogClass);
             } else {
-                throw new NoSuchElementException();
+                throw new NoSuchElementException("List of " + selectionDialogClass + " is empty");
             }
             if (valuesList.isEmpty()) {
-                throw new NoSuchElementException();
+                throw new NoSuchElementException("List of " + selectionDialogClass + " is empty");
             }
-        } catch (NoSuchElementException noSuchElementException) {
-            System.err.println("List of " + selectionDialogClass + " is empty");
+        } catch (NoSuchElementException e) {
+            e.printStackTrace();
             return;
         }
 
@@ -488,18 +532,24 @@ public class SwingUi extends JPanel {
         repaint();
     }
 
+    // EFFECTS: return current gamePartyNameSelected GameParty's current members in a ArrayList<String>
     private ArrayList<String> getGamePartySelectedMemberNames() {
-        GameParty currentGameParty = (GameParty) matchNameToClass("Game Party");
+        GameParty currentGameParty = (GameParty) matchNameToClass("GameParty");
 
         return (ArrayList<String>) currentGameParty.getCurrentMembers().stream().map(
                 Person::getName).collect(Collectors.toList());
     }
 
+    // MODIFIES: this
+    // EFFECTS: return a JButton. If className is "GameParty" getSelectedValue() from itemList as gamePartyNameSelected.
+    // Else if, className is "Person", getSelectedValue() from itemList as personNameSelected and
+    // removePersonFromGameParty. Then check recursive call with checkRecursiveRemovePersonFromGameParty to assess last
+    // boolean.
     private JButton createRemovePersonFromGamePartySetButton(String className, boolean last, JList<String> itemList) {
         JButton setButton = new JButton("Set");
 
         setButton.addActionListener(e -> {
-            if (className.equals("Game Party")) {
+            if (className.equals("GameParty")) {
                 gamePartyNameSelected = itemList.getSelectedValue();
 
             } else if (className.equals("Person")) {
@@ -511,6 +561,9 @@ public class SwingUi extends JPanel {
         return setButton;
     }
 
+    // MODIFIES: this
+    // EFFECTS: Check if last is true, if true, returnOriginalState(). If not true, open selection dialogs for removing
+    // a person from a game party addRemovePersonFromGamePartySelectionDialogs() for Person selection with last as true
     private void checkRecursiveRemovePersonFromGameParty(Boolean last) {
         if (last) {
             setVisible(true);
@@ -520,17 +573,23 @@ public class SwingUi extends JPanel {
         }
     }
 
+    // MODIFIES: this, gamePartyFinder
+    // EFFECTS: remove Person and GameParty from personNameSelected and gamePartyNameSelected from gamePartyFinder.
+    // Print stack trace when catching PartyNotInFinderException.
     private void removePersonFromGameParty() {
         Person person = (Person) matchNameToClass("Person");
-        GameParty gameParty = (GameParty) matchNameToClass("Game Party");
+        GameParty gameParty = (GameParty) matchNameToClass("GameParty");
 
         try {
             gamePartyFinder.removePersonFromGameParty(gameParty, person);
         } catch (PartyNotInFinderException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: Add 2 Formatted Text fields that only accept Numbers for "# of Games Played" and "# of Games Won".
+    // Create a button panel with createSubmitButtonEndGameSession() as a submitButton.
     private void addEndGameSessionFields() {
         removeAll();
         JLabel numGamesPlayedLabel = new JLabel("# of Games Played: ");
@@ -538,22 +597,25 @@ public class SwingUi extends JPanel {
         JFormattedTextField numGamesPlayedField = new JFormattedTextField(NumberFormat.getNumberInstance());
         JFormattedTextField numGamesWonField = new JFormattedTextField(NumberFormat.getNumberInstance());
 
-        JPanel labelPane = new JPanel(new GridLayout(0, 1));
+        JPanel labelPane = new JPanel(new GridLayout(0, 20));
         labelPane.add(numGamesPlayedLabel);
         labelPane.add(numGamesWonLabel);
 
-        JPanel fieldPane = new JPanel(new GridLayout(0, 1));
+        JPanel fieldPane = new JPanel(new GridLayout(0, 20));
         fieldPane.add(numGamesPlayedField);
         fieldPane.add(numGamesWonField);
 
+        GameParty gameParty = (GameParty) matchNameToClass("GameParty");
         createLabelFieldPanel(labelPane, fieldPane);
-        createButtonPanel(createSubmitButtonEndGameSession((GameParty) matchNameToClass("Game Party"),
-                numGamesPlayedField, numGamesWonField));
+        createButtonPanel(createSubmitButtonEndGameSession(gameParty, numGamesPlayedField, numGamesWonField));
 
         revalidate();
         repaint();
     }
 
+    // MODIFIES: this, gamePartyFinder
+    // EFFECTS: return a JButton that incorporates number inputs from numGamesPlayedField and numGamesWonField
+    // JFormattedTextFields and endSession in gamePartyFinder
     private JButton createSubmitButtonEndGameSession(GameParty gameParty, JFormattedTextField numGamesPlayedField,
                                                JFormattedTextField numGamesWonField) {
         JButton submitButton = new JButton("End Session");
@@ -571,61 +633,38 @@ public class SwingUi extends JPanel {
         return submitButton;
     }
 
+    // MODIFIES: this
+    // EFFECTS: open selection dialogs to select a GameParty from a list in gamePartyFinder
     private void endGameSession() {
-        removeAll();
-        JList<String> itemList;
+        openClassSelectionDialog("GameParty", "End Session");
+    }
 
-        try {
-            itemList = new JList<>(getGamePartyFinderFieldListNames("Game Party").toArray(new String[0]));
-        } catch (NoSuchElementException noSuchElementException) {
-            System.err.println("List of Game Party is empty");
-            return;
+    // EFFECTS: If className is "Person", index through gamePartyFinder.getPeople() and find match to personNameSelected
+    // and return Person as Object. Else if className is "Game", index through gamePartyFinder.getGames() and find match
+    // to gameNameSelected and return Game as Object. Else if className is "GameParty", index through
+    // gamePartyFinder.getGameParties() and find match to gamePartyNameSelected and return GameParty as Object.
+    private Object matchNameToClass(String className) {
+        Object object = null;
+        if (className.equals("Person")) {
+            for (Person p : gamePartyFinder.getPeople()) {
+                if (p.getName().equals(personNameSelected)) {
+                    object = p;
+                }
+            }
+        } else if (className.equals("Game")) {
+            for (Game g : gamePartyFinder.getGames()) {
+                if (g.getName().equals(gameNameSelected)) {
+                    object = g;
+                }
+            }
+        } else if (className.equals("GameParty")) {
+            for (GameParty gp : gamePartyFinder.getGameParties()) {
+                if (gp.getName().equals(gamePartyNameSelected)) {
+                    object = gp;
+                }
+            }
         }
-
-        setLayout(new BorderLayout());
-        add(new JScrollPane(itemList), BorderLayout.CENTER);
-        createButtonPanel(createEndSessionSubmitButton(itemList));
-
-        revalidate();
-        repaint();
-    }
-
-    private JButton createEndSessionSubmitButton(JList<String> itemList) {
-        JButton submitButton = new JButton("Submit");
-
-        submitButton.addActionListener(e -> {
-            gamePartyNameSelected = itemList.getSelectedValue();
-            addEndGameSessionFields();
-        });
-
-        return submitButton;
-    }
-
-    private JButton createAddGamePartySubmitButton(Game game, JTextField partyName, JFormattedTextField maxPartySize) {
-        JButton button = new JButton("Submit");
-        button.addActionListener(e -> {
-            String name = partyName.getText();
-            int partySize = ((Long) maxPartySize.getValue()).intValue();
-            gamePartyFinder.addGameParty(new GameParty(game, partySize, name));
-            returnOriginalState();
-        });
-
-        return button;
-    }
-
-    // MODIFIES: this, gamePartyFinder
-    // EFFECTS: create a submit button that upon action, adds a game to the game party finder
-    private JButton createAddGameSubmitButton(JTextField nameField, JFormattedTextField maxPartySizeField) {
-        submitButton = new JButton("Submit");
-        submitButton.addActionListener(e -> {
-            // Get the text from the text field
-            String name = nameField.getText();
-            int maxPartySize = ((Long) maxPartySizeField.getValue()).intValue();
-            gamePartyFinder.addGame(new Game(name, maxPartySize));
-            returnOriginalState();
-        });
-
-        return submitButton;
+        return object;
     }
 
     // EFFECTS: if selectionType equals "Person", generate list of people names. if equals "Game", generate list of game
@@ -639,13 +678,13 @@ public class SwingUi extends JPanel {
             case "Game":
                 list = gamePartyFinder.getGameNames();
                 break;
-            case "Game Party":
+            case "GameParty":
                 list = gamePartyFinder.getGamePartyNames();
                 break;
         }
 
         if (list.isEmpty()) {
-            throw new NoSuchElementException();
+            throw new NoSuchElementException("List of " + fieldClassName + " is empty");
         } else {
             return list;
         }

@@ -2,6 +2,7 @@ package model;
 
 import exceptions.GameNotInFinderException;
 import exceptions.NotInFinderException;
+import exceptions.PartyNotInFinderException;
 import exceptions.PersonNotInFinderException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -217,6 +218,42 @@ public class GamePartyFinderTest {
         assertEquals(3, party1.getMaxPartySize());
         testGamePartyFinder.changePartySize(party1, 6);
         assertEquals(3, party1.getMaxPartySize());
+    }
+
+    @Test
+    public void testRemovePersonFromGamePartyNoExceptions() {
+        testGamePartyFinder.addPerson(person1);
+        testGamePartyFinder.addPerson(person2);
+        testGamePartyFinder.addGame(game1);
+        testGamePartyFinder.addGameParty(party1);
+        try {
+            testGamePartyFinder.addRoleToPerson(person1, game1);
+            testGamePartyFinder.addRoleToPerson(person2, game1);
+            testGamePartyFinder.addPersonToGameParty(person1, party1);
+            testGamePartyFinder.addPersonToGameParty(person2, party1);
+        } catch (Exception e) {
+            fail();
+        }
+
+        try {
+            testGamePartyFinder.removePersonFromGameParty(party1, person2);
+            assertFalse(testGamePartyFinder.viewPartyMembers(party1).contains(person2));
+            assertTrue(testGamePartyFinder.viewPartyMembers(party1).contains(person1));
+            assertEquals(1, testGamePartyFinder.viewPartyMembers(party1).size());
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testRemovePersonFromGamePartyExceptionFound() {
+        try {
+            testGamePartyFinder.removePersonFromGameParty(party2, person2);
+            fail();
+        } catch (PartyNotInFinderException partyNotInFinderException) {
+            // pass
+        }
+        assertFalse(testGamePartyFinder.getGameParties().contains(party2));
     }
 
     @Test

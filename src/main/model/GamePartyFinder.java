@@ -89,6 +89,16 @@ public class GamePartyFinder implements Writable {
         }
     }
 
+    // EFFECTS: if gameParty is in gameParties, throw PartyNotInFinderException. Else, return gameParty's list of party
+    // members
+    public ArrayList<Person> viewPartyMembers(GameParty gameParty) throws PartyNotInFinderException {
+        if (!gameParties.contains(gameParty)) {
+            throw new PartyNotInFinderException(gameParty);
+        } else {
+            return gameParty.getCurrentMembers();
+        }
+    }
+
     // MODIFIES: person
     // EFFECTS: add game to list of roles a person has
     public void addRoleToPerson(Person person, Game game) throws NotInFinderException {
