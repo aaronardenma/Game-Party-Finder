@@ -1,8 +1,14 @@
 {
-    "games": [{
-        "name": "League of Legends",
-        "maxPartyMembers": 5
-    }],
+    "games": [
+        {
+            "name": "League of Legends",
+            "maxPartyMembers": 5
+        },
+        {
+            "name": "Valorant",
+            "maxPartyMembers": 5
+        }
+    ],
     "people": [
         {
             "game stats": {
@@ -62,5 +68,24 @@
             "name": "Renee"
         }
     ],
-    "game parties": []
+    "game parties": [{
+        "game": {
+            "name": "League of Legends",
+            "maxPartyMembers": 5
+        },
+        "maxPartySize": 5,
+        "name": "aaron's league party",
+        "currentMembers": [
+            {
+                "game stats": {},
+                "roles": [],
+                "name": "Paolo"
+            },
+            {
+                "game stats": {},
+                "roles": [],
+                "name": "Aaron"
+            }
+        ]
+    }]
 }

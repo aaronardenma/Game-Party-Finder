@@ -18,8 +18,7 @@ public class Person implements Writable {
     private HashMap<String, ArrayList<Float>> gameStats;
 
     // REQUIRES: name has a non-zero length
-    // EFFECTS: name on Person is set to name; numOfRoles is set to 0;
-    // roles and GameParties are empty ArrayLists
+    // EFFECTS: name on Person is set to name; roles is an empty ArrayList; gameStats is an empty HashMap;
     public Person(String name) {
         this.name = name;
         this.roles = new ArrayList<>();
